@@ -1,7 +1,12 @@
 within TPPSim02.Pipes.BaseClases;
 
-partial model PartialElementaryChannel "Модель канала с теплоносителем"
-  replaceable package Medium = TPPSim.Media.Sodium_ph;
+partial model PartialElementaryChannel "Базовая модель участка канала"
+
+  extends TPPSim02.Pipes.BaseClases.Icons.IconElementaryChannel;
+
+  replaceable package Medium=Modelica.Media.Interfaces.PartialMedium
+  "Medium in the component"
+  annotation(Dialog(tab="Внутренний интерфейс",enable=false));
 
   //Конструктивные характеристики
   parameter Modelica.SIunits.Length ke "Абсолютная эквивалентная шероховатость";
@@ -18,7 +23,7 @@ partial model PartialElementaryChannel "Модель канала с тепло�
   //Переменные
   Modelica.SIunits.HeatFlowRate Q "Тепло переданное стенкой канала потоку теплоносителя";
   Modelica.SIunits.Velocity w_flow_v "Скорость потока в конечных объемах";
-  Medium.ThermodynamicState stateFlow(p(start = system.p_start)) "Термодинамическое состояние потока натрия";  
+  Medium.ThermodynamicState stateFlow(p(start = system.p_start)) "Термодинамическое состояние потока";  
   Real dp_fric "Потеря давления из-за сил трения";
   Real Xi_flow "Коэффициент гидравлического сопротивления участка";
   Real lambda_tr "Коэффициент трения";
@@ -30,5 +35,27 @@ partial model PartialElementaryChannel "Модель канала с тепло�
   
   //Интерфейс
   outer Modelica.Fluid.System system;
-  
+
+  annotation(
+    Documentation(
+      info = "<html>
+          <head>
+          </head>
+            <body>
+              Базовая модель участка канала.
+            </body>
+        </html>",
+      revisions = "<html>
+        <head>
+        </head>
+          <body>
+            <ul>
+              <li>
+                <i>20 April 2020</i>
+                by <a href=\"mailto:shabunin_a@mail.ru\">Artyom Shabunin</a>:<br>
+                Создан.
+              </li>
+            </ul>
+          </body>
+      </html>"));  
 end PartialElementaryChannel;
