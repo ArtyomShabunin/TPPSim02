@@ -14,13 +14,14 @@ partial model PartialChannel "Базовая модель канала"
     Dialog(group = "Поправки"));
   
   //Параметры уравнений динамики
-  parameter Dynamics energyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Dynamics"));
-  parameter Dynamics massDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Dynamics"));
-  parameter Dynamics momentumDynamics = Dynamics.SteadyState "Параметры уравнения сохранения момента" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Dynamics"));
+  parameter Dynamics energyDynamics = system.energyDynamics "Параметры уравнения сохранения энергии" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Dynamics"));
+  parameter Dynamics massDynamics = system.massDynamics "Параметры уравнения сохранения массы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Dynamics"));
+  parameter Dynamics momentumDynamics = system.momentumDynamics "Параметры уравнения сохранения момента" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Dynamics"));
   //Начальные значения
-  parameter Modelica.SIunits.AbsolutePressure p_flow_start = system.p_ambient "Начальное давление вода/пар" annotation(Dialog(tab = "Initialization"));
-  parameter Modelica.SIunits.SpecificEnthalpy h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(p_flow_start) + 100 "Начальная энтельпия вода/пар" annotation(Dialog(tab = "Initialization"));
-  parameter Modelica.SIunits.Temperature t_m_start = system.T_start "Начальная температура металла" annotation(Dialog(tab = "Initialization"));
+  parameter Modelica.SIunits.AbsolutePressure p_start = system.p_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Modelica.SIunits.Temperature t_start = system.T_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));  
+  parameter Modelica.SIunits.SpecificEnthalpy h_start = Medium.specificEnthalpy_pT(p_start, t_start) "Начальная энтальпия" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Modelica.SIunits.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
 
   //Интерфейс
   outer Modelica.Fluid.System system;

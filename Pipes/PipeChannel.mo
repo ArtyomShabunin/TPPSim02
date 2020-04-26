@@ -29,19 +29,21 @@ model PipeChannel "Модель канала в круглой трубе"
   final parameter Modelica.SIunits.Area f_flow = n_parallel * Modelica.Constants.pi * Din ^ 2 / 4 "Площадь для прохода теплоносителя";
   
   //Переменные
-  replaceable TPPSim02.Pipes.ElementaryChannel Channel[1, numberOfVolumes](redeclare package Medium = Medium,
-                                                                     ke = fill(ke,1, numberOfVolumes),
-                                                                     f_flow = fill(f_flow,1, numberOfVolumes),
-                                                                     deltaLpipe = fill(deltaLpipe, 1, numberOfVolumes),
-                                                                     deltaLpiezo = fill(deltaLpiezo, 1, numberOfVolumes),
-                                                                     deltaSFlow = fill(deltaSFlow, 1, numberOfVolumes),
-                                                                     deltaVFlow = fill(deltaVFlow, 1, numberOfVolumes),
-                                                                     p_flow_start = fill(p_flow_start, 1, numberOfVolumes),
-                                                                     h_start = fill(h_start, 1, numberOfVolumes),
-                                                                     energyDynamics = fill(energyDynamics, 1, numberOfVolumes),
-                                                                     massDynamics = fill(energyDynamics, 1, numberOfVolumes),
-                                                                     momentumDynamics = fill(momentumDynamics, 1, numberOfVolumes))
-                                                                     annotation(
+  replaceable TPPSim02.Pipes.ElementaryChannel Channel[1, numberOfVolumes](
+    redeclare package Medium = Medium,
+    ke = fill(ke,1, numberOfVolumes),
+    f_flow = fill(f_flow,1, numberOfVolumes),
+    deltaLpipe = fill(deltaLpipe, 1, numberOfVolumes),
+    deltaLpiezo = fill(deltaLpiezo, 1, numberOfVolumes),
+    deltaSFlow = fill(deltaSFlow, 1, numberOfVolumes),
+    deltaVFlow = fill(deltaVFlow, 1, numberOfVolumes),
+    p_start = fill(p_start, 1, numberOfVolumes),
+    h_start = fill(h_start, 1, numberOfVolumes),
+    m_flow_start = fill(m_flow_start, 1, numberOfVolumes),
+    energyDynamics = fill(energyDynamics, 1, numberOfVolumes),
+    massDynamics = fill(energyDynamics, 1, numberOfVolumes),
+    momentumDynamics = fill(momentumDynamics, 1, numberOfVolumes))
+    annotation(
     Placement(visible = true, transformation(origin = {2, 5.32907e-15}, extent = {{-40, -40}, {40, 40}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b waterOut(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -49,7 +51,7 @@ model PipeChannel "Модель канала в круглой трубе"
     Placement(visible = true, transformation(origin = {-100,0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-110, 8.88178e-16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
 
-  // Объединение элементарных моделей трубопровода
+  // Объединение элементарных моделей канала
   for i in 1:(numberOfVolumes-1) loop
     Channel[1,i].p[2] = Channel[1,i+1].p[1];
     Channel[1,i].D[2] + Channel[1,i+1].D[1] = 0;

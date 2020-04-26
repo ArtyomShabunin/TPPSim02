@@ -14,6 +14,10 @@ model ElementaryChannel "Модель одного участка канала"
   // Переменные
   Modelica.SIunits.SpecificEnthalpy hv "Удельная энтальпия в объеме";
   Modelica.SIunits.Pressure pv "Давление в объеме";
+  Medium.MassFlowRate Dv; 
+  Medium.MassFlowRate D_flow_v(start = 0) "Массовый расход потока вода/пар";
+  Modelica.SIunits.DerDensityByEnthalpy drdh;
+  Modelica.SIunits.DerDensityByPressure drdp;
   
   replaceable TPPSim02.Pipes.Interfaces.ZeroHeatTransfer heatTransfer(
     redeclare final package Medium = Medium,
@@ -31,32 +35,54 @@ equation
   Q = heatTransfer.Q_flow;
 
 //Уравнения состояния
-  //stateFlow.d = Medium.density_ph(pv, hv);
-  //stateFlow.T = Medium.temperature_ph(pv, hv);
   stateFlow = Medium.setState_ph(pv, hv);
+  drdp = min(0.00004, Medium.density_derp_h(stateFlow));
+  drdh = max(-0.0002, Medium.density_derh_p(stateFlow));
 //Уравнения для расчета процессов теплообмена
-  w_flow_v = D_flow_v / stateFlow.d / f_flow "Расчет скорости потока вода/пар в конечных объемах";
+  w_flow_v = Dv / stateFlow.d / f_flow "Расчет скорости потока вода/пар в конечных объемах";
 
-  D[2] + D[1] = 0;
+  
+// Уравнение сплошности  
+  if massDynamics == Dynamics.SteadyState then
+    D[2] + D[1] = 0;
+  else
+    D[2] + D[1] = deltaVFlow * drdp * der(pv) + deltaVFlow * drdh * der(hv);
+  end if;
+  
 //Уравнения для расчета процессов массообмена
   lambda_tr = 1 / (1.14 + 2 * log10(0.3 / 0.00014)) ^ 2;
   Xi_flow = lambda_tr * deltaLpipe / 0.3;
 
-  w_flow_v = sqrt(abs(2 * dp_fric / Xi_flow / stateFlow.d)) * sign(dp_fric);
+  
+  dp_fric = sign(w_flow_v) * (w_flow_v^2) * Xi_flow * stateFlow.d / 2;
   
   if momentumDynamics == Dynamics.SteadyState then
     p[1] - p[2] = dp_fric + dp_piez;     
   else
     p[1] - p[2] = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;
   end if;
+  
+  
+  Dv = sign(D_flow_v) * (max(abs(D_flow_v), system.m_flow_small));
+ 
   dp_piez = stateFlow.d * Modelica.Constants.g_n * deltaLpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
 initial equation
+  
   if energyDynamics == Dynamics.FixedInitial then
-    hv = h_start; 
+    hv = h_start;
   elseif energyDynamics == Dynamics.SteadyStateInitial then
-    der(hv) = 0;    
+    der(hv) = 0;
   end if;
-  der(D_flow_v) = 0;
+  if massDynamics == Dynamics.FixedInitial then
+    pv = p_start;
+  elseif massDynamics == Dynamics.SteadyStateInitial then
+    der(pv) = 0;
+  end if;
+  if momentumDynamics == Dynamics.FixedInitial then
+    D_flow_v = m_flow_start; 
+  elseif momentumDynamics == Dynamics.SteadyStateInitial then
+    der(D_flow_v) = 0;
+  end if; 
 
   annotation(
     Documentation(
