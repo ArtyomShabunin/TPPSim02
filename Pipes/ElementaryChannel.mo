@@ -15,7 +15,7 @@ model ElementaryChannel "Модель одного участка канала"
   Modelica.SIunits.SpecificEnthalpy hv "Удельная энтальпия в объеме";
   Modelica.SIunits.Pressure pv "Давление в объеме";
   Medium.MassFlowRate Dv; 
-  Medium.MassFlowRate D_flow_v(start = 0) "Массовый расход потока вода/пар";
+  Medium.MassFlowRate D_flow_v "Массовый расход потока вода/пар";
   Modelica.SIunits.DerDensityByEnthalpy drdh;
   Modelica.SIunits.DerDensityByPressure drdp;
   
@@ -63,7 +63,7 @@ equation
   end if;
   
   
-  Dv = sign(D_flow_v) * (max(abs(D_flow_v), system.m_flow_small));
+  Dv = sign(D_flow_v) * max(abs(D_flow_v), 1e-4);
  
   dp_piez = stateFlow.d * Modelica.Constants.g_n * deltaLpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
 initial equation

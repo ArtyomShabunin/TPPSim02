@@ -20,7 +20,7 @@ partial model PartialChannel "Базовая модель канала"
   //Начальные значения
   parameter Modelica.SIunits.AbsolutePressure p_start = system.p_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Modelica.SIunits.Temperature t_start = system.T_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));  
-  parameter Modelica.SIunits.SpecificEnthalpy h_start = Medium.specificEnthalpy_pT(p_start, t_start) "Начальная энтальпия" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Modelica.SIunits.SpecificEnthalpy h_start "Начальная энтальпия" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Modelica.SIunits.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
 
   //Интерфейс

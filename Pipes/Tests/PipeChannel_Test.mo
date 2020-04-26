@@ -2,7 +2,7 @@ within TPPSim02.Pipes.Tests;
 
 model PipeChannel_Test
   package Medium = Modelica.Media.Water.StandardWater;
-  inner Modelica.Fluid.System system(T_start = 573.15, energyDynamics = Modelica.Fluid.Types.Dynamics.SteadyStateInitial, massDynamics = Modelica.Fluid.Types.Dynamics.SteadyStateInitial, momentumDynamics = Modelica.Fluid.Types.Dynamics.SteadyStateInitial, p_start = 200000) annotation(
+  inner Modelica.Fluid.System system(T_start = 573.15, energyDynamics = Modelica.Fluid.Types.Dynamics.SteadyStateInitial, massDynamics = Modelica.Fluid.Types.Dynamics.SteadyState, momentumDynamics = Modelica.Fluid.Types.Dynamics.SteadyStateInitial, p_start = 200000) annotation(
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.FixedBoundary Sink_2(redeclare package Medium = Medium, T = 300 + 273.15, nPorts = 1, p = 2e5, use_T = true, use_p = true) annotation(
     Placement(visible = true, transformation(origin = {90, -20}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
