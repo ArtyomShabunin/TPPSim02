@@ -24,7 +24,7 @@ partial model PartialElementaryChannel "Базовая модель участк
   //Переменные
   Modelica.SIunits.HeatFlowRate Q "Тепло переданное стенкой канала потоку теплоносителя";
   Modelica.SIunits.Velocity w_flow_v "Скорость потока в конечных объемах";
-  Medium.ThermodynamicState stateFlow(p(start = system.p_start)) "Термодинамическое состояние потока";  
+  Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";  
   Real dp_fric "Потеря давления из-за сил трения";
   Real Xi_flow "Коэффициент гидравлического сопротивления участка";
   Real lambda_tr "Коэффициент трения";

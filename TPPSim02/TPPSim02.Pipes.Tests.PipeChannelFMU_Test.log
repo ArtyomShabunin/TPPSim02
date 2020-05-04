@@ -1,0 +1,6 @@
+assert            | debug   | Solving non-linear system 303 failed at time=0.
+|                 | |       | For more information please use -lv LOG_NLS.
+assert            | warning | Failed to solve the initialization problem without homotopy method. If homotopy is available the homotopy method is used now.
+assert            | debug   | Solving non-linear system 1075 failed at time=0.
+|                 | |       | For more information please use -lv LOG_NLS.
+assert            | info    | simulation terminated by an assertion at initialization

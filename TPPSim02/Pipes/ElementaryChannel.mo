@@ -3,9 +3,7 @@ within TPPSim02.Pipes;
 model ElementaryChannel "Модель одного участка канала"
   import Modelica.Fluid.Types.*;
   extends TPPSim02.Pipes.BaseClases.PartialElementaryChannel;
-  
-  
-  
+    
   // Уравнения динамики
   parameter Dynamics energyDynamics "Параметры уравнения сохранения энергии";
   parameter Dynamics massDynamics "Параметры уравнения сохранения массы";
@@ -35,7 +33,7 @@ equation
   Q = heatTransfer.Q_flow;
 
 //Уравнения состояния
-  stateFlow = Medium.setState_ph(pv, hv);
+  stateFlow = Medium.setState_phX(pv, hv);
   drdp = min(0.00004, Medium.density_derp_h(stateFlow));
   drdh = max(-0.0002, Medium.density_derh_p(stateFlow));
 //Уравнения для расчета процессов теплообмена

@@ -41,7 +41,7 @@ model PipeChannel "Модель канала в круглой трубе"
     h_start = fill(h_start, 1, numberOfVolumes),
     m_flow_start = fill(m_flow_start, 1, numberOfVolumes),
     energyDynamics = fill(energyDynamics, 1, numberOfVolumes),
-    massDynamics = fill(energyDynamics, 1, numberOfVolumes),
+    massDynamics = fill(massDynamics, 1, numberOfVolumes),
     momentumDynamics = fill(momentumDynamics, 1, numberOfVolumes))
     annotation(
     Placement(visible = true, transformation(origin = {2, 5.32907e-15}, extent = {{-40, -40}, {40, 40}}, rotation = 0)));

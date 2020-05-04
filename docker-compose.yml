@@ -1,0 +1,9 @@
+version: "3"
+services:
+  openmodelica:
+    image: openmodelica
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./TPPSim02:/TPPSim02
