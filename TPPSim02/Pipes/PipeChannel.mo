@@ -38,6 +38,7 @@ model PipeChannel "Модель канала в круглой трубе"
     deltaSFlow = fill(deltaSFlow, 1, numberOfVolumes),
     deltaVFlow = fill(deltaVFlow, 1, numberOfVolumes),
     p_start = fill(p_start, 1, numberOfVolumes),
+    t_start = fill(t_start, 1, numberOfVolumes),
     h_start = fill(h_start, 1, numberOfVolumes),
     m_flow_start = fill(m_flow_start, 1, numberOfVolumes),
     energyDynamics = fill(energyDynamics, 1, numberOfVolumes),

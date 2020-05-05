@@ -10,8 +10,10 @@ partial model PartialHeatTransfer "Базовая модель передачи 
     "Medium in the component"
     annotation(Dialog(tab="Внутренний интерфейс",enable=false));
 
+  parameter Medium.Temperature t_start "Начальная температура потока" annotation(Dialog(tab = "Initialization"));
+  
   // Входные переменные
-  input Medium.ThermodynamicState state
+  input Medium.ThermodynamicState state(T(nominal=t_start, start = t_start))
     "Термодинамические параметры потока в элементе";
 
   input SI.Area surfaceArea "Площадь поверхности теплообмена";
@@ -23,7 +25,7 @@ partial model PartialHeatTransfer "Базовая модель передачи 
   outer Modelica.Fluid.System system "Параметры окружающей среды";
 
   // Переменные
-  SI.Temperature Ts "Температура потока";
+  SI.Temperature Ts(nominal=t_start, start = t_start) "Температура потока";
 
   annotation(
     Documentation(

@@ -20,6 +20,7 @@ model ElementaryChannel "Модель одного участка канала"
   replaceable TPPSim02.Pipes.Interfaces.ZeroHeatTransfer heatTransfer(
     redeclare final package Medium = Medium,
     state = stateFlow,
+    t_start = t_start,
     surfaceArea = deltaSFlow)
     annotation(
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

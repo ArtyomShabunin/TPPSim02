@@ -11,15 +11,15 @@ model PipeChannelFMU_Test "Тестовый пример с моделью PipeC
     Placement(visible = true, transformation(origin = {-90, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Ramp ramp1(duration = 600, height = 0.5e5, offset = 2e5, startTime = 60) annotation(
     Placement(visible = true, transformation(origin = {-90, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Pipes.PipeChannel channel_1(redeclare package Medium = Medium, Lpiezo = -10, h_start = Medium.specificEnthalpy_pT(system.p_start, system.T_start), numberOfVolumes = 5) annotation(
+  TPPSim02.Pipes.PipeChannel channel_1(redeclare package Medium = Medium, Lpiezo = -10, h_start = Medium.specificEnthalpy_pT(system.p_start, system.T_start), massDynamics = Modelica.Fluid.Types.Dynamics.SteadyState, momentumDynamics = Modelica.Fluid.Types.Dynamics.SteadyState, numberOfVolumes = 5) annotation(
     Placement(visible = true, transformation(origin = {-60, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.PipeChannel channel_2(redeclare package Medium = Medium, Lpiezo = -10, h_start = Medium.specificEnthalpy_pT(system.p_start, system.T_start), numberOfVolumes = 5) annotation(
     Placement(visible = true, transformation(origin = {0, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Fluid.Valves.ValveCompressible valve_1(redeclare package Medium = Medium, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 300, filteredOpening = true, riseTime = 30) annotation(
+  Modelica.Fluid.Valves.ValveCompressible valve_1(redeclare package Medium = Medium, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 300, dp(fixed = false), dp_nominal = system.dp_small, filteredOpening = true, m_flow(fixed = false), m_flow_nominal = system.m_flow_start, p_nominal = system.p_start, riseTime = 30) annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.PipeChannel channel_3(redeclare package Medium = Medium, Lpiezo = -10, h_start = Medium.specificEnthalpy_pT(system.p_start, system.T_start), numberOfVolumes = 5) annotation(
     Placement(visible = true, transformation(origin = {60, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Fluid.Valves.ValveCompressible valve_2(redeclare package Medium = Medium, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 300, filteredOpening = true, riseTime = 30) annotation(
+  Modelica.Fluid.Valves.ValveCompressible valve_2(redeclare package Medium = Medium, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 300, dp_nominal = system.dp_small, filteredOpening = true, m_flow_nominal = system.m_flow_start, m_flow_start = system.m_flow_start, p_nominal = system.p_start, riseTime = 30) annotation(
     Placement(visible = true, transformation(origin = {30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput valve1_pos(start=1) annotation(
     Placement(visible = true, transformation(origin = {-100, 50}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-100, 50}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
@@ -65,6 +65,6 @@ equation
           </body>
       </html>"),
     experiment(StartTime = 0, StopTime = 700, Tolerance = 1e-03, Interval = 0.01),
-    Documentation);
+  __OpenModelica_simulationFlags(s = "dassl"));
 
 end PipeChannelFMU_Test;

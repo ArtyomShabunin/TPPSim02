@@ -17,8 +17,9 @@ partial model PartialElementaryChannel "Базовая модель участк
   parameter Modelica.SIunits.Area f_flow "Площадь для прохода теплоносителя";
     
   //Начальные значения 
-  parameter Medium.AbsolutePressure p_start "Начальное давление вода/пар" annotation(Dialog(tab = "Initialization"));
-  parameter Medium.SpecificEnthalpy h_start "Начальная удельная энтальпия вода/пар" annotation(Dialog(tab = "Initialization"));
+  parameter Medium.AbsolutePressure p_start "Начальное давление потока" annotation(Dialog(tab = "Initialization"));
+  parameter Medium.Temperature t_start "Начальная температура потока" annotation(Dialog(tab = "Initialization"));
+  parameter Medium.SpecificEnthalpy h_start "Начальная удельная энтальпия потока" annotation(Dialog(tab = "Initialization"));
   parameter Modelica.SIunits.MassFlowRate m_flow_start"Начальное значение массового расхода" annotation(Dialog(tab = "Initialization"));   
   
   //Переменные
@@ -29,7 +30,7 @@ partial model PartialElementaryChannel "Базовая модель участк
   Real Xi_flow "Коэффициент гидравлического сопротивления участка";
   Real lambda_tr "Коэффициент трения";
   Medium.AbsolutePressure p[2] "Давление потока вода/пар в узловых точках";
-  Medium.SpecificEnthalpy H[2] "Теплота потока вода/пар в узловых точках";  
+  Modelica.SIunits.HeatFlowRate H[2] "Теплота потока вода/пар в узловых точках";  
   Medium.MassFlowRate D[2] "Массовый расход потока вода/пар в узловых точках";  
   Real dp_piez "Перепад давления из-за изменения пьезометрической высоты";  
   
