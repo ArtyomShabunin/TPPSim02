@@ -1,0 +1,37 @@
+FROM openmodelica/openmodelica:v1.14.1-minimal
+
+RUN apt-get update
+RUN apt-get install --yes git
+
+# clone OMSimulator
+RUN git clone --recurse-submodules https://github.com/OpenModelica/OMSimulator.git
+
+#install latest cmake
+ADD https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.sh /cmake-3.7.2-Linux-x86_64.sh
+RUN mkdir /opt/cmake
+RUN sh /cmake-3.7.2-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
+RUN ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
+RUN cmake --version
+
+RUN apt-get install --yes python
+RUN apt-get install --yes autoconf
+RUN apt-get install --yes libtool
+RUN apt-get install --yes automake
+RUN apt-get install --yes libxml2-dev
+RUN apt-get install --yes g++
+RUN apt-get install --yes make
+RUN apt-get install --yes libreadline-dev
+
+WORKDIR /OMSimulator
+RUN make config-3rdParty
+RUN make config-OMSimulator
+RUN make OMSimulator -j4
+#RUN export PATH="/OMSimulator/install/linux/bin/:$PATH"
+ENV PATH="/OMSimulator/install/linux/bin/:${PATH}"
+
+RUN apt-get install --yes python-pip
+RUN python -m pip install -U https://github.com/OpenModelica/OMPython/archive/master.zip
+
+WORKDIR /TPPSim02
+
+CMD ["OMSimulatorPython"]

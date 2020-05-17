@@ -4,6 +4,13 @@ services:
     image: openmodelica
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.om
+    volumes:
+      - ./TPPSim02:/TPPSim02
+  omsimulator:
+    image: omsimulator
+    build:
+      context: .
+      dockerfile: Dockerfile.oms
     volumes:
       - ./TPPSim02:/TPPSim02
