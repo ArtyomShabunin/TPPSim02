@@ -30,7 +30,7 @@ RUN make OMSimulator -j4
 ENV PATH="/OMSimulator/install/linux/bin/:${PATH}"
 
 RUN apt-get install --yes python-pip
-RUN python -m pip install -U https://github.com/OpenModelica/OMPython/archive/master.zip
+#RUN python -m pip install -U https://github.com/OpenModelica/OMPython/archive/master.zip
 
 WORKDIR /TPPSim02
 

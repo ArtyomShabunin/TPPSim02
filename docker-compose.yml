@@ -14,3 +14,19 @@ services:
       dockerfile: Dockerfile.oms
     volumes:
       - ./TPPSim02:/TPPSim02
+  ompython:
+    image: ompython
+    build:
+      context: .
+      dockerfile: Dockerfile.omp
+    volumes:
+      - ./TPPSim02:/TPPSim02
+  opc1:
+    image: opc1
+    ports:
+      - "4841:4841"
+    build:
+      context: .
+      dockerfile: Dockerfile.opc1
+    volumes:
+      - ./TPPSim02:/TPPSim02

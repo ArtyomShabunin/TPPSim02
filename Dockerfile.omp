@@ -1,0 +1,51 @@
+#FROM docker.openmodelica.org/build-deps
+
+#RUN apt-get update \
+#  && apt-get install -qy gnupg wget ca-certificates apt-transport-https sudo \
+#  && echo "deb https://build.openmodelica.org/apt `lsb_release -sc`  release" > /etc/apt/sources.list.d/openmodelica.list \
+#  && wget https://build.openmodelica.org/apt/openmodelica.asc -O- | apt-key add - \
+#  && apt-get update \
+#  && apt-get install -qy --no-install-recommends omc \
+#  && pip2 install pytest \
+#  && pip3 install pytest \
+#  && rm -rf /var/lib/apt/lists/*
+
+#RUN python -m pip install -U https://github.com/OpenModelica/OMPython/archive/master.zip
+
+# Clean up APT when done.
+#RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Add User
+#RUN useradd -m -s /bin/bash artyom
+
+#USER artyom
+#ENV USER artyom
+
+#CMD ["python"]
+
+FROM debian
+#EXPOSE 8000
+#EXPOSE 8001
+RUN apt-get update
+RUN apt-get install nano -y
+RUN apt-get install wget -y
+RUN apt-get install gnupg2 -y
+RUN apt-get install lsb-release -y
+RUN for deb in deb deb-src; do echo "$deb http://build.openmodelica.org/apt `lsb_release -cs` stable"; done | tee /etc/apt/sources.list.d/openmodelica.list
+RUN wget -q http://build.openmodelica.org/apt/openmodelica.asc -O- | apt-key add -
+RUN apt-get update
+RUN apt-get install python3 -y
+RUN apt-get install python3-pip -y
+RUN apt-get install openmodelica -y
+RUN pip3 install https://github.com/OpenModelica/OMPython/archive/master.zip
+RUN pip3 install matplotlib
+RUN pip3 install opcua
+
+RUN adduser --disabled-password --gecos "" artyom
+RUN su artyom
+USER artyom
+ENV USER artyom
+
+WORKDIR /TPPSim02
+
+CMD [ "python3"]

@@ -1,0 +1,3 @@
+LOG_SUCCESS       | info    | The initialization finished successfully without homotopy method.
+[05/23/2020 09:16:18.420] warning/network	Error during binding of the server socket
+stdout            | info    | The embedded server is initialized.
