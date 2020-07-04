@@ -1,2 +1,5 @@
 *.bak-mo
 .DS_Store
+**/temp
+*.mat
+*.fmu

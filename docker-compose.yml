@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   openmodelica:
     image: openmodelica
@@ -9,6 +9,12 @@ services:
       - ./TPPSim02:/TPPSim02
   omsimulator:
     image: omsimulator
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+        reservations:
+          memory: 16G
     build:
       context: .
       dockerfile: Dockerfile.oms
