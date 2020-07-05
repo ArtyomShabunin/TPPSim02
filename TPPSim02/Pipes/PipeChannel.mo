@@ -2,7 +2,6 @@ within TPPSim02.Pipes;
 
 model PipeChannel "Модель канала в круглой трубе"
   extends TPPSim02.Pipes.BaseClases.PartialChannel;
-  
   //Конструктивные характеристики
   parameter Modelica.SIunits.Diameter Din = 0.3 "Внутренний диаметр трубопровода" annotation(
     Dialog(group = "Конструктивные характеристики"));
@@ -17,21 +16,20 @@ model PipeChannel "Модель канала в круглой трубе"
   parameter Real n_parallel = 1 "Число параллельных трубопроводов" annotation(
     Dialog(group = "Конструктивные характеристики"));
 
-  //Параметры разбиения
+//Параметры разбиения
   parameter Integer numberOfVolumes "Число участков разбиения" annotation(
     Dialog(group = "Параметры разбиения"));
-  
   //Расчетные конструктивные параметры
   final parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfVolumes;
   final parameter Modelica.SIunits.Length deltaLpiezo = Lpiezo / numberOfVolumes;
   final parameter Modelica.SIunits.Area deltaSFlow = n_parallel * deltaLpipe * Modelica.Constants.pi * Din "Внутренняя площадь одного участка ряда труб";
   final parameter Modelica.SIunits.Volume deltaVFlow = k_volume * n_parallel * deltaLpipe * Modelica.Constants.pi * Din ^ 2 / 4 "Внутренний объем одного участка ряда труб";
   final parameter Modelica.SIunits.Area f_flow = n_parallel * Modelica.Constants.pi * Din ^ 2 / 4 "Площадь для прохода теплоносителя";
-  
   //Переменные
   replaceable TPPSim02.Pipes.ElementaryChannel Channel[1, numberOfVolumes](
     redeclare package Medium = Medium,
     ke = fill(ke,1, numberOfVolumes),
+    Din = fill(Din,1, numberOfVolumes),
     f_flow = fill(f_flow,1, numberOfVolumes),
     deltaLpipe = fill(deltaLpipe, 1, numberOfVolumes),
     deltaLpiezo = fill(deltaLpiezo, 1, numberOfVolumes),
@@ -50,9 +48,10 @@ model PipeChannel "Модель канала в круглой трубе"
     Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_a waterIn(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {-100,0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-110, 8.88178e-16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heatTransfer[1, numberOfVolumes] annotation(
+    Placement(visible = true, transformation(origin = {0, 98}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 98}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
-
-  // Объединение элементарных моделей канала
+// Объединение элементарных моделей канала
   for i in 1:(numberOfVolumes-1) loop
     Channel[1,i].p[2] = Channel[1,i+1].p[1];
     Channel[1,i].D[2] + Channel[1,i+1].D[1] = 0;
@@ -67,6 +66,8 @@ equation
   for i in 1:numberOfVolumes loop
     Channel[1,i].stateFlow.p = Channel[1,i].p[1];
     Channel[1,i].D_flow_v + Channel[1,i].D[2] = 0;
+    Channel[1,i].t_m = heatTransfer[1,i].T;
+    heatTransfer[1,i].Q_flow = Channel[1,i].Q;
   end for;
   
   waterIn.h_outflow = Channel[1,1].stateFlow.h;
@@ -75,6 +76,7 @@ equation
   Channel[1, numberOfVolumes].stateFlow.h = waterOut.h_outflow;
   Channel[1, numberOfVolumes].D[2] = waterOut.m_flow;
   Channel[1, numberOfVolumes].p[2] = waterOut.p;
+
 
   annotation(
     Documentation(info = "<html>

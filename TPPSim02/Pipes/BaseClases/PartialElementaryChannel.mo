@@ -15,6 +15,7 @@ partial model PartialElementaryChannel "Базовая модель участк
   parameter Modelica.SIunits.Area deltaSFlow "Внутренняя площадь одного участка ряда труб";
   parameter Modelica.SIunits.Volume deltaVFlow "Внутренний объем одного участка ряда труб";
   parameter Modelica.SIunits.Area f_flow "Площадь для прохода теплоносителя";
+  parameter Modelica.SIunits.Diameter Din "Внутренний диаметр";
     
   //Начальные значения 
   parameter Medium.AbsolutePressure p_start "Начальное давление потока" annotation(Dialog(tab = "Initialization"));
@@ -24,7 +25,9 @@ partial model PartialElementaryChannel "Базовая модель участк
   
   //Переменные
   Modelica.SIunits.HeatFlowRate Q "Тепло переданное стенкой канала потоку теплоносителя";
+//  Modelica.SIunits.CoefficientOfHeatTransfer alpha "Коэффициент теплопередачи со стороны потока вода/пар";
   Modelica.SIunits.Velocity w_flow_v "Скорость потока в конечных объемах";
+  Modelica.SIunits.Temperature t_m "Температура металла на участках трубопровода";
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";  
   Real dp_fric "Потеря давления из-за сил трения";
   Real Xi_flow "Коэффициент гидравлического сопротивления участка";
