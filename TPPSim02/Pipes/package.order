@@ -1,6 +1,11 @@
 BaseClases
 Interfaces
+Tests
 ElementaryChannel
 PipeChannel
-Tests
 Channel
+VolumeNode
+FlowNode
+OneNodeChannel
+NodesChannel
+HeatingNodesChannel
