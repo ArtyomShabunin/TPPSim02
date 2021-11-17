@@ -1,8 +1,8 @@
-within TPPSim02.Pipes.Tests;
+within TPPSim02.GasDuct.Tests;
 
-model Node_Test
-  package Medium = Modelica.Media.Water.StandardWater;
-  TPPSim02.Pipes.VolumeNode node(Q = 0)  annotation(
+model VolumeNode_Test
+  package Medium = TPPSim02.Media.ExhaustGas;
+  TPPSim02.GasDuct.VolumeNode node(Q = 0)  annotation(
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   inner Modelica.Fluid.System system annotation(
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -25,4 +25,7 @@ equation
     Line(points = {{-78, 70}, {-42, 70}}, color = {0, 0, 127}));
   connect(gain.y, boundary_out.m_flow_in) annotation(
     Line(points = {{-18, 70}, {88, 70}, {88, 8}, {80, 8}}, color = {0, 0, 127}));
-end Node_Test;
+
+annotation(
+    experiment(StartTime = 0, StopTime = 1, Tolerance = 1e-6, Interval = 0.002));
+end VolumeNode_Test;

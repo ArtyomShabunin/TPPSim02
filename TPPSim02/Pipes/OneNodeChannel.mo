@@ -2,6 +2,7 @@ within TPPSim02.Pipes;
 
 model OneNodeChannel
   package Medium = Modelica.Media.Water.StandardWater;
+  outer ThermoPower.System system;
   
   parameter Modelica.SIunits.Diameter Din = 0.3 "Внутренний диаметр трубопровода" annotation(
   Dialog(group = "Конструктивные характеристики"));
@@ -18,22 +19,22 @@ model OneNodeChannel
     Placement(visible = true, transformation(origin = {-50, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode channelB annotation(
     Placement(visible = true, transformation(origin = {50, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Pipes.VolumeNode node annotation(
+  TPPSim02.Pipes.VolumeNode node(use_Q_in = true)  annotation(
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heat annotation(
     Placement(visible = true, transformation(origin = {0, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
 
   Dv = abs(Input.m_flow-Output.m_flow)/2;
-  node.Q = TPPSim02.Thermal.HeatFlowRates.hfrForPipeHeating(
-            Din=Din,
-            f_flow=f_flow,
-            deltaSFlow=deltaSFlow,
-            stateFlow=node.stateFlow,
-            t_m=heat.T,
-            Dv=Dv);
+  node.Q_in = TPPSim02.Thermal.HeatFlowRates.hfrForPipeHeating(
+              Din=Din,
+              f_flow=f_flow,
+              deltaSFlow=deltaSFlow,
+              stateFlow=node.stateFlow,
+              t_m=heat.T,
+              Dv=Dv);
 
-  heat.Q_flow = node.Q;
+  heat.Q_flow = node.Q_in;
 
   connect(channelA.Input, Input) annotation(
     Line(points = {{-60, 0}, {-98, 0}, {-98, 0}, {-98, 0}}, color = {0, 127, 255}));
@@ -45,5 +46,5 @@ equation
     Line(points = {{60, 0}, {100, 0}, {100, 0}, {100, 0}}, color = {0, 127, 255}));
 
 annotation(
-    Icon(graphics = {Rectangle(lineColor = {116, 116, 116}, fillColor = {225, 225, 225}, pattern = LinePattern.None, fillPattern = FillPattern.HorizontalCylinder, extent = {{-100, 40}, {100, -40}}), Ellipse(lineColor = {85, 255, 255}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-60, 60}, {60, -60}}, endAngle = 360)}));
+    Icon(graphics = {Rectangle(lineColor = {116, 116, 116}, fillColor = {85, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.HorizontalCylinder, extent = {{-100, 40}, {100, -40}}), Ellipse(lineColor = {85, 255, 255}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-60, 60}, {60, -60}})}));
 end OneNodeChannel;

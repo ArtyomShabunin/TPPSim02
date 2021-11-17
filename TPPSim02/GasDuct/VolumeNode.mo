@@ -1,25 +1,25 @@
-within TPPSim02.Pipes;
+within TPPSim02.GasDuct;
 
 model VolumeNode
-  package Medium = Modelica.Media.Water.StandardWater;
+  package Medium = TPPSim02.Media.ExhaustGas;
   outer ThermoPower.System system;
   
   parameter Modelica.SIunits.Volume deltaVFlow = 1 "Внутренний объем узла";
   parameter Modelica.SIunits.HeatFlowRate Q = 0 "Тепло переданное стенкой канала потоку теплоносителя";
   parameter Medium.AbsolutePressure p_start = system.p_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));
-  parameter Medium.SpecificEnthalpy h_start = 1e5 "Начальная энтальпия" annotation(Evaluate=true,Dialog(tab = "Initialization"));
-  
+  parameter Medium.Temperature T_start = system.T_start "Начальная Температура" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+
   parameter Boolean use_Q_in = false
     "Get the heat flow rate from the input connector"
-    annotation(Evaluate=true, HideResult=true, choices(checkBox=true));  
+    annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
   
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";
   
   Medium.AbsolutePressure pv;
-  Medium.SpecificEnthalpy hv;
+  Medium.Temperature Tv;
   Medium.SpecificEnthalpy[2] H;
     
-  Medium.DerDensityByEnthalpy drdh;
+  Medium.DerDensityByTemperature drdT;
   Medium.DerDensityByPressure drdp;
 
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(
@@ -34,7 +34,7 @@ model VolumeNode
 protected
   Modelica.Blocks.Interfaces.RealInput Q_in_internal
     "Needed to connect to conditional connector";
-    
+
 equation
 
   connect(Q_in, Q_in_internal);
@@ -42,27 +42,31 @@ equation
     Q_in_internal = Q;
   end if;
 
-  stateFlow = Medium.setState_phX(pv, hv);
-  drdp = min(0.00004, Medium.density_derp_h(stateFlow));
-  drdh = max(-0.0002, Medium.density_derh_p(stateFlow));
+  stateFlow = Medium.setState_pTX(pv, Tv, actualStream(Input.Xi_outflow));
 
-  deltaVFlow * stateFlow.d * der(hv) = Q_in_internal + H[2] + H[1];
+  drdp = Medium.density_derp_T(stateFlow);
+  drdT = Medium.density_derT_p(stateFlow);
+
+  deltaVFlow * Medium.density(stateFlow) * Medium.heatCapacity_cp(stateFlow) * der(Tv) = Q_in_internal + H[2] + H[1];
   
-  Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdh * der(hv);
-
+  Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdT * der(Tv);
+  
   H[1] = semiLinear(Input.m_flow, inStream(Input.h_outflow), Input.h_outflow);
   H[2] = semiLinear(Output.m_flow, inStream(Output.h_outflow), Output.h_outflow);
 
   Input.p = pv;
   Output.p = pv;
   
-  Output.h_outflow = hv;
-  Input.h_outflow = hv;
+  Output.h_outflow = Medium.specificEnthalpy(stateFlow);
+  Input.h_outflow = Medium.specificEnthalpy(stateFlow);
+  
+  Output.Xi_outflow = inStream(Input.Xi_outflow);
+  Input.Xi_outflow = inStream(Output.Xi_outflow);
   
 initial equation
-  hv = h_start;
+  Tv = T_start;
   pv = p_start;
 
 annotation(
-    Icon(graphics = {Ellipse(lineColor = {85, 255, 255}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-100, 100}, {100, -100}})}));
+    Icon(graphics = {Ellipse(lineColor = {255, 170, 0}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-100, 100}, {100, -100}})}));
 end VolumeNode;
