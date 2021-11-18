@@ -15,5 +15,4 @@ equation
     Line(points = {{-60, 0}, {-10, 0}}, color = {0, 127, 255}));
   connect(channel.Output, boundary_out.ports[1]) annotation(
     Line(points = {{10, 0}, {60, 0}}, color = {0, 127, 255}));
-protected
 end Channel2_Test;
