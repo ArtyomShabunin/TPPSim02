@@ -26,9 +26,7 @@ model GasSideHE
   parameter Modelica.SIunits.Length Lpipe = 20.85 "Длина теплообменной трубки" annotation(
     Dialog(group = "Геометрия пучка"));
   // Конструктивные характеристики труб
-  parameter Modelica.SIunits.Diameter Din = 0.038 "Внутренний диаметр трубок теплообменника" annotation(
-    Dialog(group = "Конструктивные характеристики труб"));
-  parameter Modelica.SIunits.Length delta = 0.003 "Толщина стенки трубки теплообменника" annotation(
+  parameter Modelica.SIunits.Diameter Dout = 0.044 "Наружный диаметр трубок теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
   //Характеристики оребрения
   parameter Modelica.SIunits.Length delta_fin = 0.0008 "Средняя толщина ребра, м" annotation(
@@ -42,28 +40,28 @@ model GasSideHE
   
   //  Расчетные конструктивные параметры
   final parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
-  final parameter Modelica.SIunits.Length omega = Modelica.Constants.pi * (Din + 2 * delta) "Наружный периметр трубы";
-  final parameter Modelica.SIunits.Length Dfin = Din + 2 * delta + 2 * hfin "Диаметр ребер, м";
-  final parameter Real psi_fin = 1 / (2 * (Din + 2 * delta) * sfin) * (Dfin ^ 2 - (Din + 2 * delta) ^ 2 + 2 * Dfin * delta_fin) + 1 - delta_fin / sfin "Коэффициент оребрения, равный отношению полной поверхности пучка к поверхности несущих труб на оребренном участке";  
-  final parameter Real sigma1 = s1 / (Din + 2 * delta) "Относительный поперечный шаг";
-  final parameter Real sigma2 = s2 / (Din + 2 * delta) "Относительный продольный шаг";
+  final parameter Modelica.SIunits.Length omega = Modelica.Constants.pi * Dout "Наружный периметр трубы";
+  final parameter Modelica.SIunits.Length Dfin = Dout + 2 * hfin "Диаметр ребер, м";
+  final parameter Real psi_fin = 1 / (2 * Dout * sfin) * (Dfin ^ 2 - Dout ^ 2 + 2 * Dfin * delta_fin) + 1 - delta_fin / sfin "Коэффициент оребрения, равный отношению полной поверхности пучка к поверхности несущих труб на оребренном участке";  
+  final parameter Real sigma1 = s1 / Dout "Относительный поперечный шаг";
+  final parameter Real sigma2 = s2 / Dout "Относительный продольный шаг";
   final parameter Real sigma3 = sqrt(0.25 * sigma1 ^ 2 + sigma2) "Средний относительный диагональный шаг труб";
   final parameter Real xfin = sigma1 / sigma2 - 1.26 / psi_fin - 2 "Параметр 'x' для шахматного пучка";
   final parameter Real phi_fin = Modelica.Math.tanh(xfin) "Некий параметр 'фи'";
   final parameter Real n_fin = 0.7 + 0.08 * phi_fin + 0.005 * psi_fin "Показатель степени 'n' в формуле коэффициента теплоотдачи";
   final parameter Real Cs = (1.36 - phi_fin) * (11 / (psi_fin + 8) - 0.14) "Коэффициент, определяемый в зависимости от от относительного поперечного и продольного шага труб в пучке, типа пучка и коэффициента оребрения";
   final parameter Real Cz = if z2 < 8 and sigma1 / sigma2 < 2 then 3.15 * z2 ^ 0.05 - 2.5 elseif z2 < 8 and sigma1 / sigma2 >= 2 then 3.5 * z2 ^ 0.03 - 2.72 else 1 "Поправка на число рядов труб по ходу газов";
-  final parameter Real Kaer = (Din + 2 * delta) ^ 0.611 * z2 / s1 ^ 0.412 / s2 ^ 0.515 "Коэффициент для расчета аэродинамического сопротивления";
+  final parameter Real Kaer = Dout ^ 0.611 * z2 / s1 ^ 0.412 / s2 ^ 0.515 "Коэффициент для расчета аэродинамического сопротивления";
   //Характеристики оребрения
-  final parameter Real H_fin = (omega * deltaLpipe * (1 - delta_fin / sfin) + (2 * Modelica.Constants.pi * (Dfin ^ 2 - (Din + 2 * delta) ^ 2) / 4 + Modelica.Constants.pi * Dfin * delta_fin) * (deltaLpipe / sfin)) * z1 * zahod "Площадь оребренной поверхности";  
+  final parameter Real H_fin = (omega * deltaLpipe * (1 - delta_fin / sfin) + (2 * Modelica.Constants.pi * (Dfin ^ 2 - Dout ^ 2) / 4 + Modelica.Constants.pi * Dfin * delta_fin) * (deltaLpipe / sfin)) * z1 * zahod "Площадь оребренной поверхности";  
    
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel annotation(
+  TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel(Kaer = 0.01, deltaLpiezo = 0, deltaLpipe = 0.3, f_flow = 1)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.VolumeNode[numberOfFlueSections, numberOfTubeSections] node  annotation(
+  TPPSim02.GasDuct.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(deltaVFlow = 1, use_Q_in = true)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[numberOfFlueSections, numberOfTubeSections] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -84,8 +82,8 @@ equation
       k[i,j] = Medium.thermalConductivity(node[i,j].stateFlow);
       Pr[i,j] = Medium.prandtlNumber(node[i,j].stateFlow);
       Dv[i,j] = abs(node[i,j].Input.m_flow-node[i,j].Output.m_flow)/2;
-      Re[i,j] = Dv[i,j] * (Din + 2 * delta) / (channel[i,j].f_flow * mu[i,j]);
-      alfa[i,j] = k_gamma_gas * 0.113 * Cs * Cz * k[i,j] / (Din + 2 * delta) * Re[i,j] ^ n_fin * Pr[i,j] ^ 0.33;
+      Re[i,j] = Dv[i,j] * Dout / (channel[i,j].f_flow * mu[i,j]);
+      alfa[i,j] = k_gamma_gas * 0.113 * Cs * Cz * k[i,j] / Dout * Re[i,j] ^ n_fin * Pr[i,j] ^ 0.33;
 
       node[i,j].Q_in = -alfa[i,j] * H_fin * (node[i,j].Tv - heat[i,j].T);     
       heat[i,j].Q_flow = node[i,j].Q_in;
