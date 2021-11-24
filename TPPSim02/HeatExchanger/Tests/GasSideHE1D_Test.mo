@@ -1,12 +1,10 @@
 within TPPSim02.HeatExchanger.Tests;
 
-model GasSideHE_Test
+model GasSideHE1D_Test
   package Medium = TPPSim02.Media.ExhaustGas;
   
-  parameter Integer numberOfTubeSections = 3 "Число участков разбиения трубы" annotation(
+  parameter Integer Nv = 1 "Число узлов" annotation(
     Dialog(group = "Параметры разбиения"));
-  parameter Integer numberOfFlueSections = 4 "Число участков разбиения газохода" annotation(
-    Dialog(group = "Параметры разбиения")); 
   
   Modelica.Fluid.Sources.FixedBoundary boundary_in(redeclare package Medium = Medium, T = 50 + 273.15, nPorts = 1) annotation(
     Placement(visible = true, transformation(origin = {-72, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -16,20 +14,20 @@ model GasSideHE_Test
     Placement(visible = true, transformation(origin = {90, -12}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   inner TPPSim02.System system annotation(
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.GasSideHE gasSideHE(numberOfFlueSections=numberOfFlueSections,
-                                             numberOfTubeSections=numberOfTubeSections) annotation(
-    Placement(visible = true, transformation(origin = {-10, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature[numberOfFlueSections, numberOfTubeSections] fixedTemperature(each T = 50 + 273.15)  annotation(
+  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature[Nv] fixedTemperature(each T = 50 + 273.15)  annotation(
     Placement(visible = true, transformation(origin = {-10, 30}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+  TPPSim02.HeatExchanger.GasSideHE1D gasSideHE1D(Nv=Nv) annotation(
+    Placement(visible = true, transformation(origin = {-10, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   connect(ramp.y, boundary_out.p_in) annotation(
     Line(points = {{80, -12}, {62, -12}}, color = {0, 0, 127}));
-  connect(fixedTemperature.port, gasSideHE.heat) annotation(
-    Line(points = {{-10, 20}, {-10, -6}}, color = {191, 0, 0}));
-  connect(boundary_in.ports[1], gasSideHE.Input) annotation(
-    Line(points = {{-62, -20}, {-20, -20}}, color = {0, 127, 255}));
-  connect(gasSideHE.Output, boundary_out.ports[1]) annotation(
+  connect(gasSideHE1D.Input, boundary_in.ports[1]) annotation(
+    Line(points = {{-20, -20}, {-62, -20}}, color = {0, 127, 255}));
+  connect(gasSideHE1D.Output, boundary_out.ports[1]) annotation(
     Line(points = {{0, -20}, {40, -20}}, color = {0, 127, 255}));
+  connect(gasSideHE1D.heat, fixedTemperature.port) annotation(
+    Line(points = {{-10, -6}, {-10, 20}}, color = {191, 0, 0}, thickness = 0.5));
   annotation(
     experiment(StartTime = 0, StopTime = 1000, Tolerance = 1e-03, Interval = 0.2));
-end GasSideHE_Test;
+
+end GasSideHE1D_Test;

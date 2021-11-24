@@ -1,15 +1,14 @@
 within TPPSim02.HeatExchanger;
 
-model GasSideHE
+model GasSideHE1D
   extends TPPSim02.HeatExchanger.Icons.IconGasSideHE;
+  import Modelica.Constants.pi;
   package Medium = TPPSim02.Media.ExhaustGas;
   outer ThermoPower.System system;
   
   // Параметры разбиения
-  parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
-    Dialog(group = "Параметры разбиения"));
-  parameter Integer numberOfFlueSections = 1 "Число участков разбиения газохода" annotation(
-    Dialog(group = "Параметры разбиения"));  
+  parameter Integer Nv = 1 "Число узлов" annotation(
+    Dialog(group = "Параметры разбиения")); 
   // Геометрия пучка
   parameter Modelica.SIunits.Length s1 = 82e-3 "Поперечный шаг" annotation(
     Dialog(group = "Геометрия пучка"));
@@ -37,10 +36,9 @@ model GasSideHE
   parameter Real k_gamma_gas = 1 "Поправка к коэффициенту теплоотдачи со стороны газов";
   
   //  Расчетные конструктивные параметры
-  final parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
-  final parameter Modelica.SIunits.Length omega = Modelica.Constants.pi * Dout "Наружный периметр трубы";
-  final parameter Modelica.SIunits.Volume deltaVGas = deltaLpipe * (s1 * s2 - Modelica.Constants.pi * Dout ^ 2 / 4) * z1 "Объем одного участка газового тракта";
-  final parameter Modelica.SIunits.Area f_gas = (1 - Dout / s1 * (1 + 2 * hfin * delta_fin / sfin / Dout)) * deltaLpipe * s2 * z1 "Площадь для прохода газов";
+  final parameter Modelica.SIunits.Length omega = pi * Dout "Наружный периметр трубы";
+  final parameter Modelica.SIunits.Volume deltaVGas = Lpipe * (s1 * s2 - pi * Dout ^ 2 / 4) * z1 * z2 / Nv "Объем одного участка газового тракта";
+  final parameter Modelica.SIunits.Area f_gas = (1 - Dout / s1 * (1 + 2 * hfin * delta_fin / sfin / Dout)) * Lpipe * s2 * z1 * z2 / Nv  "Площадь для прохода газов";
   final parameter Modelica.SIunits.Length Dfin = Dout + 2 * hfin "Диаметр ребер, м";
   final parameter Real psi_fin = 1 / (2 * Dout * sfin) * (Dfin ^ 2 - Dout ^ 2 + 2 * Dfin * delta_fin) + 1 - delta_fin / sfin "Коэффициент оребрения, равный отношению полной поверхности пучка к поверхности несущих труб на оребренном участке";  
   final parameter Real sigma1 = s1 / Dout "Относительный поперечный шаг";
@@ -53,54 +51,50 @@ model GasSideHE
   final parameter Real Cz = if z2 < 8 and sigma1 / sigma2 < 2 then 3.15 * z2 ^ 0.05 - 2.5 elseif z2 < 8 and sigma1 / sigma2 >= 2 then 3.5 * z2 ^ 0.03 - 2.72 else 1 "Поправка на число рядов труб по ходу газов";
   final parameter Real Kaer = Dout ^ 0.611 * z2 / s1 ^ 0.412 / s2 ^ 0.515 "Коэффициент для расчета аэродинамического сопротивления";
   //Характеристики оребрения
-  final parameter Real H_fin = (omega * deltaLpipe * (1 - delta_fin / sfin) + (2 * Modelica.Constants.pi * (Dfin ^ 2 - Dout ^ 2) / 4 + Modelica.Constants.pi * Dfin * delta_fin) * (deltaLpipe / sfin)) * z1 * zahod "Площадь оребренной поверхности";  
+  final parameter Real H_fin = (omega * Lpipe * (1 - delta_fin / sfin) + (2 * pi * (Dfin ^ 2 - Dout ^ 2) / 4 + pi * Dfin * delta_fin) * (Lpipe / sfin)) * z1 * zahod * z2 / Nv "Площадь оребренной поверхности";  
    
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel(each Kaer = Kaer,
-                                                                                  each deltaLpiezo = 0,
-                                                                                  each deltaLpipe = deltaLpipe,
-                                                                                  each f_flow = f_gas)  annotation(
+  TPPSim02.GasDuct.FlowNode[Nv+1] channel(each Kaer = Kaer,
+                                          each deltaLpiezo = 0,
+                                          each deltaLpipe = s2 * z2 / Nv,
+                                          each f_flow = f_gas)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVGas,
-                                                                               each use_Q_in = true)   annotation(
+  TPPSim02.GasDuct.VolumeNode[Nv] node(each deltaVFlow = deltaVGas,
+                                       each use_Q_in = true)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[numberOfFlueSections, numberOfTubeSections] heat annotation(
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[Nv] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  Medium.DynamicViscosity[numberOfFlueSections, numberOfTubeSections] mu "Динамическая вязкость газов";
-  Medium.ThermalConductivity[numberOfFlueSections, numberOfTubeSections] k "Коэффициент теплопроводности газов";
-  Modelica.SIunits.PerUnit[numberOfFlueSections, numberOfTubeSections] Re "Число Рейнольдса";
-  Medium.PrandtlNumber[numberOfFlueSections, numberOfTubeSections] Pr "Число Прандтля";
-  Modelica.SIunits.CoefficientOfHeatTransfer[numberOfFlueSections, numberOfTubeSections] alfa "Коэффициент теплопередачи со стороны потока газов";
-  Medium.MassFlowRate[numberOfFlueSections, numberOfTubeSections] Dv "Массовый расход потока";
+  Medium.DynamicViscosity[Nv] mu "Динамическая вязкость газов";
+  Medium.ThermalConductivity[Nv] k "Коэффициент теплопроводности газов";
+  Modelica.SIunits.PerUnit[Nv] Re "Число Рейнольдса";
+  Medium.PrandtlNumber[Nv] Pr "Число Прандтля";
+  Modelica.SIunits.CoefficientOfHeatTransfer[Nv] alfa "Коэффициент теплопередачи со стороны потока газов";
+  Medium.MassFlowRate[Nv] Dv "Массовый расход потока";
 
 equation
 
-  for i in 1:numberOfFlueSections loop
-    for j in 1:numberOfTubeSections loop
+  for i in 1:Nv loop
       
-      mu[i,j] = Medium.dynamicViscosity(node[i,j].stateFlow);
-      k[i,j] = Medium.thermalConductivity(node[i,j].stateFlow);
-      Pr[i,j] = Medium.prandtlNumber(node[i,j].stateFlow);
-      Dv[i,j] = abs(node[i,j].Input.m_flow-node[i,j].Output.m_flow)/2;
-      Re[i,j] = Dv[i,j] * Dout / (channel[i,j].f_flow * mu[i,j]);
-      alfa[i,j] = k_gamma_gas * 0.113 * Cs * Cz * k[i,j] / Dout * Re[i,j] ^ n_fin * Pr[i,j] ^ 0.33;
+    mu[i] = Medium.dynamicViscosity(node[i].stateFlow);
+    k[i] = Medium.thermalConductivity(node[i].stateFlow);
+    Pr[i] = Medium.prandtlNumber(node[i].stateFlow);
+    Dv[i] = abs(node[i].Input.m_flow-node[i].Output.m_flow)/2;
+    Re[i] = Dv[i] * Dout / (channel[i].f_flow * mu[i]);
+    alfa[i] = k_gamma_gas * 0.113 * Cs * Cz * k[i] / Dout * Re[i] ^ n_fin * Pr[i] ^ 0.33;
 
-      node[i,j].Q_in = -alfa[i,j] * H_fin * (node[i,j].Tv - heat[i,j].T);     
-      heat[i,j].Q_flow = node[i,j].Q_in;
-         
-      connect(channel[i,j].Output, node[i,j].Input);
-      connect(node[i,j].Output, channel[i+1,j].Input);
+    node[i].Q_in = -alfa[i] * H_fin * (node[i].Tv - heat[i].T);     
+    heat[i].Q_flow = node[i].Q_in;
+       
+    connect(channel[i].Output, node[i].Input);
+    connect(node[i].Output, channel[i+1].Input);
       
-    end for;
   end for;
 
-  for i in 1:numberOfTubeSections loop
-    connect(Input, channel[1,i].Input);
-    connect(channel[numberOfFlueSections+1,i].Output, Output);  
-  end for;
+  connect(Input, channel[1].Input);
+  connect(channel[Nv+1].Output, Output);  
 
-end GasSideHE;
+end GasSideHE1D;

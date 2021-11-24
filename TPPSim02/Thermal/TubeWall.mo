@@ -19,8 +19,8 @@ model TubeWall
     Dialog(tab = "Initialisation"));
   parameter SI.Temperature TstartN = Tstartbar "Temperature start value - last volume" annotation(
     Dialog(tab = "Initialisation"));
-//  parameter SI.Temperature Tvolstart = Functions.linspaceExt(Tstart1, TstartN, Nw) annotation(
-//    Dialog(tab = "Initialisation"));
+  //  parameter SI.Temperature Tvolstart = Functions.linspaceExt(Tstart1, TstartN, Nw) annotation(
+  //    Dialog(tab = "Initialisation"));
   parameter SI.Temperature Tvolstart = Tstart1 annotation(
     Dialog(tab = "Initialisation"));
   parameter Choices.Init.Options initOpt = system.initOpt "Initialisation option" annotation(
@@ -31,9 +31,9 @@ model TubeWall
   outer ThermoPower.System system "System wide properties";
   SI.Temperature Tvol(start = Tvolstart) "Volume temperatures";
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a ext annotation(
-    Placement(visible = true, transformation(origin = {0, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {0, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b int annotation(
-    Placement(visible = true, transformation(origin = {-4, 32}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {0, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   assert(rext > rint, "External radius must be greater than internal radius");
   L / Nw * Nt * rhomcm * Am * der(Tvol) = int.Q_flow + ext.Q_flow "Energy balance";
