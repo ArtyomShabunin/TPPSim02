@@ -12,7 +12,7 @@ model FlowNode
   parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   
   Medium.MassFlowRate D_flow_v "Массовый расход потока вода/пар";
-  Modelica.SIunits.Velocity w_flow_v "Скорость потока в конечных объемах";
+  Modelica.SIunits.Velocity w_flow "Скорость потока в конечных объемах";
 
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";
   
@@ -29,11 +29,11 @@ equation
 
   stateFlow = Medium.setState_phX(Output.p, inStream(Input.h_outflow));
 
-  w_flow_v = D_flow_v / stateFlow.d / f_flow "Расчет скорости потока вода/пар в конечных объемах";
+  w_flow = D_flow_v / stateFlow.d / f_flow "Расчет скорости потока вода/пар в конечных объемах";
 
   lambda_tr = 1 / (1.14 + 2 * log10(Din / ke)) ^ 2;
   Xi_flow = lambda_tr * deltaLpipe / Din;
-  dp_fric = abs(w_flow_v) * w_flow_v * Xi_flow * stateFlow.d / 2 / system.g;
+  dp_fric = abs(w_flow) * w_flow * Xi_flow * stateFlow.d / 2 / system.g;
   dp_piez = stateFlow.d * system.g * deltaLpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
 
   Input.p - Output.p = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;

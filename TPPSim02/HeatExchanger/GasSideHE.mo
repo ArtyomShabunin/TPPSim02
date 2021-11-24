@@ -8,11 +8,9 @@ model GasSideHE
   // Параметры разбиения
   parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
     Dialog(group = "Параметры разбиения"));
-  parameter Integer numberOfFlueSections = z2 "Число участков разбиения газохода" annotation(
+  parameter Integer numberOfFlueSections = 1 "Число участков разбиения газохода" annotation(
     Dialog(group = "Параметры разбиения"));  
   // Геометрия пучка
-  parameter TPPSim.Choices.HRSG_type HRSG_type_set = TPPSim02.Choices.HRSG_type.horizontalBottom "Геометрия пучка (горизонтальный/вертикальный)" annotation(
-    Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length s1 = 82e-3 "Поперечный шаг" annotation(
     Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length s2 = 110e-3 "Продольный шаг" annotation(
@@ -41,6 +39,8 @@ model GasSideHE
   //  Расчетные конструктивные параметры
   final parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
   final parameter Modelica.SIunits.Length omega = Modelica.Constants.pi * Dout "Наружный периметр трубы";
+  final parameter Modelica.SIunits.Volume deltaVGas = deltaLpipe * (s1 * s2 - Modelica.Constants.pi * Dout ^ 2 / 4) * z1 "Объем одного участка газового тракта";
+  final parameter Modelica.SIunits.Area f_gas = (1 - Dout / s1 * (1 + 2 * hfin * delta_fin / sfin / Dout)) * deltaLpipe * s2 * z1 "Площадь для прохода газов";
   final parameter Modelica.SIunits.Length Dfin = Dout + 2 * hfin "Диаметр ребер, м";
   final parameter Real psi_fin = 1 / (2 * Dout * sfin) * (Dfin ^ 2 - Dout ^ 2 + 2 * Dfin * delta_fin) + 1 - delta_fin / sfin "Коэффициент оребрения, равный отношению полной поверхности пучка к поверхности несущих труб на оребренном участке";  
   final parameter Real sigma1 = s1 / Dout "Относительный поперечный шаг";
@@ -59,9 +59,13 @@ model GasSideHE
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel(Kaer = 0.01, deltaLpiezo = 0, deltaLpipe = 0.3, f_flow = 1)  annotation(
+  TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel(each Kaer = Kaer,
+                                                                                  each deltaLpiezo = 0,
+                                                                                  each deltaLpipe = deltaLpipe,
+                                                                                  each f_flow = f_gas)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(deltaVFlow = 1, use_Q_in = true)   annotation(
+  TPPSim02.GasDuct.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVGas,
+                                                                               each use_Q_in = true)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[numberOfFlueSections, numberOfTubeSections] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

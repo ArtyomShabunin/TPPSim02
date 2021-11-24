@@ -30,12 +30,6 @@ model TubeWall
   final parameter SI.HeatCapacity Cm = Nt * L * Am * rhomcm "Total heat capacity";
   outer ThermoPower.System system "System wide properties";
   SI.Temperature Tvol(start = Tvolstart) "Volume temperatures";
-  //  ThermoPower.Thermal.DHTVolumes int(final N=Nw, T(start=Tvolstart))
-  //    "Internal surface"
-  //     annotation (Placement(transformation(extent={{-40,20},{40,40}}, rotation=0)));
-  //  ThermoPower.Thermal.DHTVolumes ext(final N=Nw, T(start=Tvolstart))
-  //    "External surface"
-  //     annotation (Placement(transformation(extent={{-40,-42},{40,-20}}, rotation=0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a ext annotation(
     Placement(visible = true, transformation(origin = {0, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b int annotation(
