@@ -1,13 +1,14 @@
 within TPPSim02.HeatExchanger;
 
-model GFHE2D
+model GFHE1D
+  extends TPPSim02.HeatExchanger.Icons.IconHE;
   extends TPPSim02.HeatExchanger.Icons.IconHE;
   package Medium_G = TPPSim02.Media.ExhaustGas;
   package Medium_F = Modelica.Media.Water.StandardWater;
   //Параметры разбиения
-  inner parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
-    Dialog(group = "Параметры разбиения"));  
-//Геометрия пучка
+  parameter Integer Nv = 1 "Число узлов" annotation(
+    Dialog(group = "Параметры разбиения")); 
+  // Геометрия пучка
   //  parameter TPPSim.Choices.HRSG_type HRSG_type_set = Choices.HRSG_type.horizontalBottom "Геометрия пучка (горизонтальный/вертикальный)" annotation(
   //    Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length s1 = 82e-3 "Поперечный шаг" annotation(
@@ -52,11 +53,11 @@ model GFHE2D
     Placement(visible = true, transformation(origin = {50, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {40, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b flowOut(redeclare package Medium = Medium_F) annotation(
     Placement(visible = true, transformation(origin = {-50, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-40, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.GasSideHE2D gasSide(Dout = Din + 2*delta,
+  TPPSim02.HeatExchanger.GasSideHE1D gasSide(Dout = Din + 2*delta,
                                              Lpipe = Lpipe,
                                              delta_fin = delta_fin,
                                              hfin = hfin,
-                                             numberOfTubeSections = numberOfTubeSections,
+                                             Nv = Nv,
                                              s1 = s1,
                                              s2 = s2,
                                              sfin = sfin,
@@ -64,39 +65,39 @@ model GFHE2D
                                              z2 = z2,
                                              zahod = zahod)  annotation(
     Placement(visible = true, transformation(origin = {0, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.FlowSideHE2D flowSide(Din = Din,
+  TPPSim02.HeatExchanger.FlowSideHE1D flowSide(Din = Din,
                                                Lpipe = Lpipe,
                                                ke = ke,
-                                               numberOfTubeSections = numberOfTubeSections,
+                                               Nv = Nv,
                                                z1 = z1,
                                                z2 = z2,
                                                zahod = zahod)  annotation(
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.CounterCurrent2D counterCurrent(numberOfFlueSections = z2, numberOfTubeSections = numberOfTubeSections)  annotation(
+  TPPSim02.Thermal.CounterCurrent1D counterCurrent(Nv = Nv)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[z2, numberOfTubeSections] wall(each L = Lpipe,
-                                                           each Nt = z1,
-                                                           each Tstart1 = 40 + 273.15,
-                                                           each TstartN = 40 + 273.15,
-                                                           each WallRes = false,
-                                                           each lambda = 20,
-                                                           each rext = (Din + 2 * delta) / 2,
-                                                           each rhomcm = 7800 * 650,
-                                                           each rint = Din / 2) annotation(
+  TPPSim02.Thermal.TubeWall[Nv] wall(each L = Lpipe,
+                                     each Nt = z1,
+                                     each Tstart1 = 40 + 273.15,
+                                     each TstartN = 40 + 273.15,
+                                     each WallRes = false,
+                                     each lambda = 20,
+                                     each rext = (Din + 2 * delta) / 2,
+                                     each rhomcm = 7800 * 650,
+                                     each rint = Din / 2) annotation(
     Placement(visible = true, transformation(origin = {0, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
-  connect(gasSide.Input, gasIn) annotation(
-    Line(points = {{-10, -50}, {-50, -50}}, color = {0, 127, 255}));
-  connect(gasSide.Output, gasOut) annotation(
-    Line(points = {{10, -50}, {50, -50}}, color = {0, 127, 255}));
   connect(flowSide.Output, flowOut) annotation(
     Line(points = {{-10, 50}, {-50, 50}}, color = {0, 127, 255}));
   connect(flowSide.Input, flowIn) annotation(
     Line(points = {{10, 50}, {50, 50}}, color = {0, 127, 255}));
-  connect(wall.int, flowSide.heat) annotation(
-    Line(points = {{0, 20}, {0, 34}}, color = {191, 0, 0}));
+  connect(gasSide.Input, gasIn) annotation(
+    Line(points = {{-10, -50}, {-50, -50}}, color = {0, 127, 255}));
+  connect(gasSide.Output, gasOut) annotation(
+    Line(points = {{10, -50}, {50, -50}}, color = {0, 127, 255}));
+  connect(gasSide.heat, counterCurrent.side2) annotation(
+    Line(points = {{0, -36}, {0, -18}}, color = {191, 0, 0}, thickness = 0.5));
   connect(counterCurrent.side1, wall.ext) annotation(
     Line(points = {{0, -12}, {0, 14}}, color = {191, 0, 0}, thickness = 0.5));
-  connect(counterCurrent.side2, gasSide.heat) annotation(
-    Line(points = {{0, -18}, {0, -36}}, color = {191, 0, 0}, thickness = 0.5));
-end GFHE2D;
+  connect(wall.int, flowSide.heat) annotation(
+    Line(points = {{0, 20}, {0, 34}}, color = {191, 0, 0}, thickness = 0.5));
+end GFHE1D;

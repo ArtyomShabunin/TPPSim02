@@ -2,4 +2,5 @@ HeatFlowRates
 Alpha
 DHT_HT
 TubeWall
-CounterCurrent
+CounterCurrent1D
+CounterCurrent2D

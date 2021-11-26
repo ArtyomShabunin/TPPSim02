@@ -1,6 +1,6 @@
 within TPPSim02.Thermal;
 
-model CounterCurrent
+model CounterCurrent2D
   extends ThermoPower.Icons.HeatFlow;
   // Параметры разбиения
   parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
@@ -20,4 +20,4 @@ equation
 
   annotation(
     Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(fillPattern = FillPattern.Solid, lineThickness = 0.5, points = {{-72, 0}, {-72, -16}, {-50, -8}, {-72, 0}}), Polygon(fillPattern = FillPattern.Solid, lineThickness = 0.5, points = {{72, 0}, {52, 8}, {72, 16}, {72, 0}})}));
-end CounterCurrent;
+end CounterCurrent2D;
