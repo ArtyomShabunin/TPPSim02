@@ -37,7 +37,8 @@ equation
 
   dp_piez = d * system.g * deltaLpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
 
-  Input.p - Output.p = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;
+//  Input.p - Output.p = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;
+  Input.p - Output.p = 0;
 
   Input.m_flow = D_flow_v;
   Output.m_flow + Input.m_flow = 0;
@@ -49,7 +50,7 @@ equation
   Input.Xi_outflow = inStream(Output.Xi_outflow);
 
 initial equation
-  D_flow_v = m_flow_start;
+//  D_flow_v = m_flow_start;
 
   annotation(
     Icon(graphics = {Rectangle(lineColor = {116, 116, 116}, fillColor = {255, 170, 127}, pattern = LinePattern.None, fillPattern = FillPattern.HorizontalCylinder, extent = {{-100, 40}, {100, -40}})}));

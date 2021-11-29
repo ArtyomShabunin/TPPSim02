@@ -10,10 +10,15 @@ function alphaSat "Коэффициент теплоотдачи при конд
 protected
   package Medium = Modelica.Media.Water.WaterIF97_ph;
   Medium.ThermodynamicState stateLiquid;
+  Modelica.SIunits.Velocity w_flow;
+  Modelica.SIunits.ThermalConductivity k_flow;
   Modelica.SIunits.CoefficientOfHeatTransfer alfa_l "Коэффициент теплопередачи для воды"; 
 algorithm
   stateLiquid := Medium.setState_px(p, 0);
+  w_flow := abs(D_flow_v) / stateLiquidw.d / f_flow;
+  k_flow := Medium.thermalConductivity(stateLiquid);
   alfa_l := TPPSim02.Thermal.Alpha.alfaForSHandECO(stateLiquid, D_flow_v, f_flow, Din);
+  alfa_l := alpha_func(w_flow = w_flow, Din = Din, k = k_flow, Re = Re[i], Pr = Pr[i]);
   alfa_sat :=  alfa_l * (stateLiquid.d / rho) ^ 0.5;
   annotation(
     Documentation(info = "<html><head></head><body>

@@ -19,6 +19,8 @@ model FlowSideHE1D
     Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length Lpipe = 20.85 "Длина теплообменной трубки" annotation(
     Dialog(group = "Геометрия пучка"));
+  parameter Modelica.SIunits.Length Lpiezo = 20.85 "Разность высот выходного и входного фланцев" annotation(
+    Dialog(group = "Геометрия пучка"));
   // Конструктивные характеристики труб
   parameter Modelica.SIunits.Diameter Din = 0.038 "Внутренний диаметр трубок теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
@@ -38,8 +40,8 @@ model FlowSideHE1D
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[Nv] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode[Nv+1] channel(each Din = Din,
-                                                                                each deltaLpiezo = 0,
-                                                                                each deltaLpipe = Lpipe * z2 / zahod / Nv,
+                                                                                each deltaLpiezo = Lpiezo / (Nv+1),
+                                                                                each deltaLpipe = Lpipe * z2 / zahod / (Nv+1),
                                                                                 each f_flow = f_flow,
                                                                                 each ke = ke)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

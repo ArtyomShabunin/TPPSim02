@@ -6,6 +6,9 @@ function hfrForPipeHeating "Тепловой поток (HeatFlowRate) к вну
   input Modelica.SIunits.Area deltaSFlow "Внутренняя площадь одного участка ряда труб";
    
   input Medium.ThermodynamicState stateFlow;
+  input Modelica.SIunits.AbsolutePressure p "Давление";
+  
+  
   input Modelica.SIunits.Temperature t_m "Температура металла на участках трубопровода";
   input Medium.MassFlowRate Dv "Массовый расход";
  
@@ -25,8 +28,9 @@ protected
   Modelica.SIunits.CoefficientOfHeatTransfer alpha_conv "Коэфициент теплопередачи при конвективном теплообмене";  
   
 algorithm
-  alpha_sat :=  TPPSim02.Thermal.Alpha.alphaSat(stateFlow.p, Dv, f_flow, Din, stateFlow.d);
-  alpha_conv := TPPSim02.Thermal.Alpha.alfaForSHandECO(stateFlow, Dv, f_flow, Din); 
+  alpha_sat :=  TPPSim02.Thermal.Alpha.alphaSat(p, Dv, f_flow, Din, stateFlow.d);
+  alpha_conv := TPPSim02.Thermal.Alpha.alfaForSHandECO(stateFlow, Dv, f_flow, Din);
+//alpha_func(w_flow = w_flow[i], Din = Din, k = k[i], Re = Re[i], Pr = Pr[i]); 
   Q_cond := deltaSFlow * alpha_sat * max((min(Medium.saturationTemperature(stateFlow.p), stateFlow.T) - t_m), 0);
   Q_cond_max := max(Dv * (stateFlow.h - Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(stateFlow.p)), 0);
   Q_conv := deltaSFlow * alpha_conv * (stateFlow.T - t_m);

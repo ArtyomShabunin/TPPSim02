@@ -21,6 +21,8 @@ model FlowSideHE2D
     Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length Lpipe = 20.85 "Длина теплообменной трубки" annotation(
     Dialog(group = "Геометрия пучка"));
+  parameter Modelica.SIunits.Length Lpiezo = 20.85 "Разность высот выходного и входного фланцев" annotation(
+    Dialog(group = "Геометрия пучка"));
   // Конструктивные характеристики труб
   parameter Modelica.SIunits.Diameter Din = 0.038 "Внутренний диаметр трубок теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));

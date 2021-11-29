@@ -49,7 +49,8 @@ equation
 
   deltaVFlow * Medium.density(stateFlow) * Medium.heatCapacity_cp(stateFlow) * der(Tv) = Q_in_internal + H[2] + H[1];
   
-  Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdT * der(Tv);
+//  Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdT * der(Tv);
+  Input.m_flow + Output.m_flow = 0;
   
   H[1] = semiLinear(Input.m_flow, inStream(Input.h_outflow), Input.h_outflow);
   H[2] = semiLinear(Output.m_flow, inStream(Output.h_outflow), Output.h_outflow);
@@ -64,8 +65,8 @@ equation
   Input.Xi_outflow = inStream(Output.Xi_outflow);
   
 initial equation
-  Tv = T_start;
-  pv = p_start;
+//  Tv = T_start;
+//  pv = p_start;
 
 annotation(
     Icon(graphics = {Ellipse(lineColor = {255, 170, 0}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-100, 100}, {100, -100}})}));

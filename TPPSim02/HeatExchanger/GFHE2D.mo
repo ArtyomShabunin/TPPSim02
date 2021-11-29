@@ -22,6 +22,8 @@ model GFHE2D
     Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length Lpipe = 20.85 "Длина теплообменной трубки" annotation(
     Dialog(group = "Геометрия пучка"));
+  parameter Modelica.SIunits.Length Lpiezo = 20.85 "Разность высот выходного и входного фланцев" annotation(
+    Dialog(group = "Геометрия пучка"));
   //Конструктивные характеристики труб
   inner parameter Modelica.SIunits.Diameter Din = 0.038 "Внутренний диаметр трубок теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
@@ -66,6 +68,7 @@ model GFHE2D
     Placement(visible = true, transformation(origin = {0, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.FlowSideHE2D flowSide(Din = Din,
                                                Lpipe = Lpipe,
+                                               Lpiezo = Lpiezo,
                                                ke = ke,
                                                numberOfTubeSections = numberOfTubeSections,
                                                z1 = z1,
