@@ -183,7 +183,7 @@ equation
   downStr.m_flow + min(HPFW.m_flow, -m_flow_small) = D_downStr;
 //Подъемные трубы
   upStr.h_outflow = hw;
-  upStr.p = ps;
+  upStr.p = ps + state_upStr.d * system.g * Hw;
   upStr.m_flow = D_upStr;
   annotation(
     Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})),

@@ -29,9 +29,15 @@ model FlowSideHE1D
 
 // Расчетные параметры
   final inner parameter Modelica.SIunits.Area f_flow = Modelica.Constants.pi * Din ^ 2 * z1 * zahod / 4 "Площадь для прохода теплоносителя";
-//  final inner parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
   final inner parameter Modelica.SIunits.Area deltaSFlow = Lpipe * Modelica.Constants.pi * Din * z1 * z2 / Nv "Внутренняя площадь одного участка";
   final inner parameter Modelica.SIunits.Volume deltaVFlow = Lpipe * f_flow * z2 / zahod / Nv "Внутренний объем одного участка ряда труб";
+
+  // Начальные параметры
+  parameter Medium.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -40,12 +46,16 @@ model FlowSideHE1D
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[Nv] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode[Nv+1] channel(each Din = Din,
-                                                                                each deltaLpiezo = Lpiezo / (Nv+1),
-                                                                                each deltaLpipe = Lpipe * z2 / zahod / (Nv+1),
-                                                                                each f_flow = f_flow,
-                                                                                each ke = ke)  annotation(
+                                        each deltaLpiezo = Lpiezo / (Nv+1),
+                                        each deltaLpipe = Lpipe * z2 / zahod / (Nv+1),
+                                        each f_flow = f_flow,
+                                        each ke = ke,
+                                        each m_flow_start = m_flow_start)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Pipes.VolumeNode[Nv] node(each deltaVFlow = deltaVFlow, each use_Q_in = true)  annotation(
+  Pipes.VolumeNode[Nv] node(each deltaVFlow = deltaVFlow, 
+                            h_start = linspace(Medium.specificEnthalpy_pT(pin_start,Tin_start),Medium.specificEnthalpy_pT(pout_start,Tout_start),Nv),
+                            p_start = linspace(pin_start, pout_start, Nv),
+                            each use_Q_in = true)  annotation(
     Placement(visible = true, transformation(origin = {30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
   Medium.DynamicViscosity[Nv] mu "Динамическая вязкость";

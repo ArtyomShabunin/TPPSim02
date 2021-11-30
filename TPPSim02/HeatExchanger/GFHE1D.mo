@@ -5,6 +5,7 @@ model GFHE1D
   extends TPPSim02.HeatExchanger.Icons.IconHE;
   package Medium_G = TPPSim02.Media.ExhaustGas;
   package Medium_F = Modelica.Media.Water.StandardWater;
+  outer ThermoPower.System system;
   //Параметры разбиения
   parameter Integer Nv = 1 "Число узлов" annotation(
     Dialog(group = "Параметры разбиения")); 
@@ -46,6 +47,19 @@ model GFHE1D
     Dialog(group = "Характеристики металла"));  
   parameter Modelica.SIunits.Density rho_m = 7800 "Плотность металла" annotation(
     Dialog(group = "Характеристики металла"));  
+
+  // Начальные параметры
+  parameter Modelica.SIunits.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  
+  parameter Modelica.SIunits.AbsolutePressure pin_gas_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+  parameter Modelica.SIunits.AbsolutePressure pout_gas_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+  parameter Modelica.SIunits.Temperature Tin_gas_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+  parameter Modelica.SIunits.Temperature Tout_gas_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+  parameter Modelica.SIunits.MassFlowRate m_gas_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
   
   Modelica.Fluid.Interfaces.FluidPort_a gasIn(redeclare package Medium = Medium_G) annotation(
     Placement(visible = true, transformation(origin = {-50, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-52, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -65,7 +79,12 @@ model GFHE1D
                                              sfin = sfin,
                                              z1 = z1,
                                              z2 = z2,
-                                             zahod = zahod)  annotation(
+                                             zahod = zahod,
+                                             pin_start = pin_gas_start,
+                                             pout_start = pout_gas_start,
+                                             Tin_start = Tin_gas_start,
+                                             Tout_start = Tout_gas_start,
+                                             m_flow_start = m_gas_flow_start)  annotation(
     Placement(visible = true, transformation(origin = {0, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.FlowSideHE1D flowSide(Din = Din,
                                                Lpiezo = Lpiezo,
@@ -74,15 +93,20 @@ model GFHE1D
                                                Nv = Nv,
                                                z1 = z1,
                                                z2 = z2,
-                                               zahod = zahod)  annotation(
+                                               zahod = zahod,
+                                               pin_start = pin_start,
+                                               pout_start = pout_start,
+                                               Tin_start = Tin_start,
+                                               Tout_start = Tout_start,
+                                               m_flow_start = m_flow_start)  annotation(
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.Thermal.CounterCurrent1D counterCurrent(Nv = Nv)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[Nv] wall(each L = Lpipe,
+  TPPSim02.Thermal.TubeWall[Nv] wall(each L = Lpipe/Nv,
                                      each Nt = z1,
-                                     each Tstart1 = 40 + 273.15,
-                                     each TstartN = 40 + 273.15,
-                                     each WallRes = false,
+                                     each Tstart1 = Tin_start,
+                                     each TstartN = Tout_start,
+                                     each  WallRes = false,
                                      each lambda = 20,
                                      each rext = (Din + 2 * delta) / 2,
                                      each rhomcm = 7800 * 650,

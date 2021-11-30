@@ -34,6 +34,13 @@ model GasSideHE1D
     Dialog(group = "Характеристики оребрения"));
 
   parameter Real k_gamma_gas = 1 "Поправка к коэффициенту теплоотдачи со стороны газов";
+
+  // Начальные параметры
+  parameter Medium.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   
   //  Расчетные конструктивные параметры
   final parameter Modelica.SIunits.Length omega = pi * Dout "Наружный периметр трубы";
@@ -60,10 +67,13 @@ model GasSideHE1D
   TPPSim02.GasDuct.FlowNode[Nv+1] channel(each Kaer = Kaer,
                                           each deltaLpiezo = 0,
                                           each deltaLpipe = s2 * z2 / Nv,
-                                          each f_flow = f_gas)  annotation(
+                                          each f_flow = f_gas,
+                                          each m_flow_start = m_flow_start)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.VolumeNode[Nv] node(each deltaVFlow = deltaVGas,
-                                       each use_Q_in = true)   annotation(
+                                       each use_Q_in = true,
+                                       T_start = linspace(Tin_start, Tout_start, Nv),
+                                       p_start = linspace(pin_start, pout_start, Nv))   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[Nv] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

@@ -9,6 +9,8 @@ model HeatingNodesChannel
   parameter Integer numberOfVolumes = 1 "Число участков разбиения" annotation(
     Dialog(group = "Параметры разбиения"));
 
+  replaceable function hfc_func = TPPSim02.Thermal.HeatFlowRates.hfrForPipeHeating;
+
   // Конструктивные характеристики
   parameter SI.Diameter Din = 0.3 "Внутренний диаметр" annotation(
   Dialog(group = "Конструктивные характеристики"));
@@ -54,12 +56,13 @@ equation
 
   for i in 1:(numberOfVolumes) loop
     Dv[i] = abs(node[i].Input.m_flow-node[i].Output.m_flow)/2;
-    node[i].Q_in = TPPSim02.Thermal.HeatFlowRates.hfrForPipeHeating(Din=Din,
-                                                                 f_flow=channel[i].f_flow,
-                                                                 deltaSFlow=pi*Din*n_parallel*Lpipe/numberOfVolumes,
-                                                                 stateFlow=node[i].stateFlow,
-                                                                 t_m=heat[i].T,
-                                                                 Dv=Dv[i]);
+//    node[i].Q_in = hfc_func(Din=Din,
+//                            f_flow=channel[i].f_flow,
+//                            deltaSFlow=pi*Din*n_parallel*Lpipe/numberOfVolumes,
+//                            stateFlow=node[i].stateFlow,
+//                            t_m=heat[i].T,
+//                            Dv=Dv[i]);
+    node[i].Q_in = 0;
 
     heat[i].Q_flow = node[i].Q_in;
     

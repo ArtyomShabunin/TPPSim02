@@ -7,7 +7,6 @@ model Drum
   import TPPSim02.Thermal.HeatFlowRates.hfrDrumBot;
   
   Real dt_m_top_bot "Разница между температурой металла верха и низа барабана";
-//  TPPSim.thermal.hfrForDrum Q_calc "Модель расчета тепловых потоков";
   Medium.Temperature t_m_steam(start = t_m_steam_start) "Температура металла паровой части барабана";
   Medium.Temperature t_m_water(start = t_m_water_start) "Температура металла водяной части барабана"; 
   //Интерфейс
@@ -57,7 +56,7 @@ equation
   D_w_circ = D_upStr * (1 - x_upStr);
   D_w_eco = D_fw * min((h_dew - inStream(fedWater.h_outflow)) / (h_dew - h_bubble), 1);
   Dvipar = Gw * x_w * k;
-  pw = ps + 0.5 * Hw * rhow * Modelica.Constants.g_n;
+  pw = ps + Hw * rhow * Modelica.Constants.g_n;
   sat_w = Medium.setSat_p(pw);
   rhow = Medium.density_ph(pw, hw);
   state_w = Medium.setState_ph(pw, hw);
