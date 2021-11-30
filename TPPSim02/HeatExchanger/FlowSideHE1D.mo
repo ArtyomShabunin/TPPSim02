@@ -75,7 +75,18 @@ equation
     Dv[i] = abs(node[i].Input.m_flow - node[i].Output.m_flow) / 2;
     w_flow[i] = abs(Dv[i]) / node[i].stateFlow.d / f_flow;
     Re[i] = w_flow[i] * Din * node[i].stateFlow.d / mu[i];
-    alfa[i] = alpha_func(w_flow = w_flow[i], Din = Din, k = k[i], Re = Re[i], Pr = Pr[i]);
+    
+    alfa[i] = alpha_func(w_flow = w_flow[i],
+                         Din = Din,
+                         k = k[i],
+                         Re = Re[i],
+                         Pr = Pr[i],
+                         f_flow = f_flow,
+                         state_in = channel[i].stateFlow,
+                         state_out = channel[i+1].stateFlow,
+                         pv = node[i].pv,
+                         Dv = Dv[i]);
+          
     node[i].Q_in = -alfa[i] * deltaSFlow * (node[i].stateFlow.T - heat[i].T);
     heat[i].Q_flow = node[i].Q_in;
 
