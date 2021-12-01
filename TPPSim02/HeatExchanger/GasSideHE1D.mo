@@ -3,6 +3,7 @@ within TPPSim02.HeatExchanger;
 model GasSideHE1D
   extends TPPSim02.HeatExchanger.Icons.IconGasSideHE;
   import Modelica.Constants.pi;
+  import TPPSim02.Choices.Dynamics;
   package Medium = TPPSim02.Media.ExhaustGas;
   outer ThermoPower.System system;
   
@@ -25,7 +26,7 @@ model GasSideHE1D
   // Конструктивные характеристики труб
   parameter Modelica.SIunits.Diameter Dout = 0.044 "Наружный диаметр трубок теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
-  //Характеристики оребрения
+  // Характеристики оребрения
   parameter Modelica.SIunits.Length delta_fin = 0.0008 "Средняя толщина ребра, м" annotation(
     Dialog(group = "Характеристики оребрения"));
   parameter Modelica.SIunits.Length hfin = 0.017 "Высота ребра, м" annotation(
@@ -35,14 +36,19 @@ model GasSideHE1D
 
   parameter Real k_gamma_gas = 1 "Поправка к коэффициенту теплоотдачи со стороны газов";
 
+  // Параметры уравнений динамики
+  parameter Dynamics gasEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics gasMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics gasMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics")); 
+
   // Начальные параметры
   parameter Medium.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
-  parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.MassFlowRate m_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   
-  //  Расчетные конструктивные параметры
+  // Расчетные конструктивные параметры
   final parameter Modelica.SIunits.Length omega = pi * Dout "Наружный периметр трубы";
   final parameter Modelica.SIunits.Volume deltaVGas = Lpipe * (s1 * s2 - pi * Dout ^ 2 / 4) * z1 * z2 / Nv "Объем одного участка газового тракта";
   final parameter Modelica.SIunits.Area f_gas = (1 - Dout / s1 * (1 + 2 * hfin * delta_fin / sfin / Dout)) * Lpipe * s2 * z1 * z2 / Nv  "Площадь для прохода газов";
@@ -57,7 +63,7 @@ model GasSideHE1D
   final parameter Real Cs = (1.36 - phi_fin) * (11 / (psi_fin + 8) - 0.14) "Коэффициент, определяемый в зависимости от от относительного поперечного и продольного шага труб в пучке, типа пучка и коэффициента оребрения";
   final parameter Real Cz = if z2 < 8 and sigma1 / sigma2 < 2 then 3.15 * z2 ^ 0.05 - 2.5 elseif z2 < 8 and sigma1 / sigma2 >= 2 then 3.5 * z2 ^ 0.03 - 2.72 else 1 "Поправка на число рядов труб по ходу газов";
   final parameter Real Kaer = Dout ^ 0.611 * z2 / s1 ^ 0.412 / s2 ^ 0.515 "Коэффициент для расчета аэродинамического сопротивления";
-  //Характеристики оребрения
+  // Характеристики оребрения
   final parameter Real H_fin = (omega * Lpipe * (1 - delta_fin / sfin) + (2 * pi * (Dfin ^ 2 - Dout ^ 2) / 4 + pi * Dfin * delta_fin) * (Lpipe / sfin)) * z1 * zahod * z2 / Nv "Площадь оребренной поверхности";  
    
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(
@@ -68,12 +74,15 @@ model GasSideHE1D
                                           each deltaLpiezo = 0,
                                           each deltaLpipe = s2 * z2 / Nv,
                                           each f_flow = f_gas,
-                                          each m_flow_start = m_flow_start)  annotation(
+                                          each m_flow_start = m_start,
+                                          each gasMomentumDynamics = gasMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.VolumeNode[Nv] node(each deltaVFlow = deltaVGas,
                                        each use_Q_in = true,
                                        T_start = linspace(Tin_start, Tout_start, Nv),
-                                       p_start = linspace(pin_start, pout_start, Nv))   annotation(
+                                       p_start = linspace(pin_start, pout_start, Nv),
+                                       each gasEnergyDynamics = gasEnergyDynamics,
+                                       each gasMassDynamics = gasMassDynamics)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[Nv] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

@@ -2,12 +2,17 @@ within TPPSim02.Pipes;
 
 model VolumeNode
   package Medium = Modelica.Media.Water.StandardWater;
+  import TPPSim02.Choices.Dynamics;
   outer ThermoPower.System system;
   
   parameter Modelica.SIunits.Volume deltaVFlow = 1 "Внутренний объем узла";
   parameter Modelica.SIunits.HeatFlowRate Q = 0 "Тепло переданное стенкой канала потоку теплоносителя";
   parameter Medium.AbsolutePressure p_start = system.p_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.SpecificEnthalpy h_start = 1e5 "Начальная энтальпия" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+
+  // Параметры уравнений динамики
+  parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics flowMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   
   parameter Boolean use_Q_in = false
     "Get the heat flow rate from the input connector"
@@ -46,9 +51,17 @@ equation
   drdp = min(0.00004, Medium.density_derp_h(stateFlow));
   drdh = max(-0.0002, Medium.density_derh_p(stateFlow));
 
-  deltaVFlow * stateFlow.d * der(hv) = Q_in_internal + H[2] + H[1];
+  if flowEnergyDynamics == Dynamics.SteadyState then
+    Q_in_internal + H[2] + H[1] = 0;
+  else
+    deltaVFlow * stateFlow.d * der(hv) = Q_in_internal + H[2] + H[1];
+  end if;
   
-  Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdh * der(hv);
+  if flowMassDynamics == Dynamics.SteadyState then
+    Input.m_flow + Output.m_flow = 0;
+  else
+    Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdh * der(hv);
+  end if;
 
   H[1] = semiLinear(Input.m_flow, inStream(Input.h_outflow), Input.h_outflow);
   H[2] = semiLinear(Output.m_flow, inStream(Output.h_outflow), Output.h_outflow);
@@ -60,8 +73,13 @@ equation
   Input.h_outflow = hv;
   
 initial equation
-  hv = h_start;
-  pv = p_start;
+  if flowEnergyDynamics == Dynamics.FixedInitial or flowMassDynamics == Dynamics.FixedInitial then
+    hv = h_start;
+  end if;
+  
+  if flowMassDynamics == Dynamics.FixedInitial then
+    pv = p_start;
+  end if;
 
 annotation(
     Icon(graphics = {Ellipse(lineColor = {85, 255, 255}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-100, 100}, {100, -100}})}));

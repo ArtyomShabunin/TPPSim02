@@ -3,6 +3,7 @@ within TPPSim02.GasDuct;
 model FlowNode
   package Medium = TPPSim02.Media.ExhaustGas;
   import Modelica.SIunits.Conversions.to_degF;
+  import TPPSim02.Choices.Dynamics;
   outer ThermoPower.System system;
   parameter Modelica.SIunits.Length deltaLpipe = 0.3 "Длина";
   parameter Modelica.SIunits.Length deltaLpiezo = 0 "Разность высотных отметок выхода и входа";
@@ -10,6 +11,8 @@ model FlowNode
   parameter Real Kaer = 0.01 "Коэффициент для расчета аэродинамического сопротивления";
   
   parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  
+  parameter Dynamics gasMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics")); 
   
   Medium.MassFlowRate D_flow_v "Массовый расход потока";
   Medium.Density d "Плотность газов";
@@ -37,8 +40,11 @@ equation
 
   dp_piez = d * system.g * deltaLpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
 
-//  Input.p - Output.p = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;
-  Input.p - Output.p = 0;
+  if gasMomentumDynamics == Dynamics.SteadyState then
+    Input.p - Output.p = 0;
+  else
+    Input.p - Output.p = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;
+  end if;
 
   Input.m_flow = D_flow_v;
   Output.m_flow + Input.m_flow = 0;
@@ -50,7 +56,10 @@ equation
   Input.Xi_outflow = inStream(Output.Xi_outflow);
 
 initial equation
-//  D_flow_v = m_flow_start;
+  
+  if gasMomentumDynamics == Dynamics.FixedInitial then
+    D_flow_v = m_flow_start;
+  end if;
 
   annotation(
     Icon(graphics = {Rectangle(lineColor = {116, 116, 116}, fillColor = {255, 170, 127}, pattern = LinePattern.None, fillPattern = FillPattern.HorizontalCylinder, extent = {{-100, 40}, {100, -40}})}));

@@ -1,6 +1,6 @@
 within TPPSim02.Pumps;
 
-model PressurePump
+model DropLine
   replaceable package Medium = Modelica.Media.Water.StandardWater constrainedby Modelica.Media.Interfaces.PartialMedium;
   outer ThermoPower.System system;
   Modelica.Fluid.Interfaces.FluidPort_a port_a(redeclare package Medium = Medium) annotation(
@@ -47,4 +47,4 @@ equation
 </ul></body></html>"),
     Icon(graphics = {Rectangle(fillColor = {0, 170, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, extent = {{-20, 100}, {20, -100}}), Polygon(origin = {-2, 2}, lineColor = {0, 85, 255}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-2, 60}, {6, 60}, {10, -36}, {18, -36}, {2, -70}, {-14, -36}, {-6, -36}, {-2, 60}})}));
 
-end PressurePump;
+end DropLine;

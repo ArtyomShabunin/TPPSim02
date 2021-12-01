@@ -2,17 +2,18 @@ within TPPSim02.HeatExchanger;
 
 model FlowSideHE2D
   extends TPPSim02.HeatExchanger.Icons.IconFlowSideHE;
+  import TPPSim02.Choices.Dynamics;
   package Medium = Modelica.Media.Water.StandardWater;
   outer ThermoPower.System system;
   
   replaceable function alpha_func = TPPSim02.Thermal.Alpha.alfaForSHandECO;
 
-// Параметры разбиения
+  // Параметры разбиения
   parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
     Dialog(group = "Параметры разбиения"));
   final parameter Integer numberOfFlueSections = z2 "Число участков разбиения газохода" annotation(
     Dialog(group = "Параметры разбиения"));   
-// Геометрия пучка
+  // Геометрия пучка
   parameter Integer zahod = 1 "Заходность труб теплообменника" annotation(
     Dialog(group = "Геометрия пучка"));
   parameter Integer z1 = 126 "Число труб по ширине газохода" annotation(
@@ -29,11 +30,23 @@ model FlowSideHE2D
   parameter Modelica.SIunits.Length ke = 0.00014 "Абсолютная эквивалентная шероховатость" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
 
-// Расчетные параметры
-  final inner parameter Modelica.SIunits.Area f_flow = Modelica.Constants.pi * Din ^ 2 * z1 / 4 "Площадь для прохода теплоносителя";
-  final inner parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
-  final inner parameter Modelica.SIunits.Area deltaSFlow = deltaLpipe * Modelica.Constants.pi * Din * z1 "Внутренняя площадь одного участка ряда труб";
-  final inner parameter Modelica.SIunits.Volume deltaVFlow = deltaLpipe * f_flow "Внутренний объем одного участка ряда труб";
+  // Расчетные параметры
+  final parameter Modelica.SIunits.Area f_flow = Modelica.Constants.pi * Din ^ 2 * z1 / 4 "Площадь для прохода теплоносителя";
+  final parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
+  final parameter Modelica.SIunits.Area deltaSFlow = deltaLpipe * Modelica.Constants.pi * Din * z1 "Внутренняя площадь одного участка ряда труб";
+  final parameter Modelica.SIunits.Volume deltaVFlow = deltaLpipe * f_flow "Внутренний объем одного участка ряда труб";
+
+  // Начальные параметры
+  parameter Medium.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+
+  // Параметры уравнений динамики
+  parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics flowMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -45,9 +58,14 @@ model FlowSideHE2D
                                                                                 each deltaLpiezo = 0,
                                                                                 each deltaLpipe = deltaLpipe,
                                                                                 each f_flow = f_flow,
-                                                                                each ke = ke)  annotation(
+                                                                                each ke = ke,
+                                                                                each m_flow_start = m_flow_start,
+                                                                                each flowMomentumDynamics = flowMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Pipes.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow, each use_Q_in = true)  annotation(
+  Pipes.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow,
+                                                                    each use_Q_in = true,
+                                                                    each flowEnergyDynamics = flowEnergyDynamics,
+                                                                    each flowMassDynamics = flowMassDynamics)  annotation(
     Placement(visible = true, transformation(origin = {30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
   Medium.DynamicViscosity[numberOfFlueSections, numberOfTubeSections] mu "Динамическая вязкость";
@@ -67,7 +85,18 @@ equation
       Dv[i, j] = abs(node[i, j].Input.m_flow - node[i, j].Output.m_flow) / 2;
       w_flow[i, j] = abs(Dv[i, j]) / node[i, j].stateFlow.d / f_flow;
       Re[i, j] = w_flow[i, j] * Din * node[i, j].stateFlow.d / mu[i, j];
-      alfa[i, j] = alpha_func(w_flow = w_flow[i, j], Din = Din, k = k[i, j], Re = Re[i, j], Pr = Pr[i, j]);
+      
+      alfa[i, j] = alpha_func(w_flow = w_flow[i, j],
+                              Din = Din,
+                              k = k[i, j],
+                              Re = Re[i, j],
+                              Pr = Pr[i, j],
+                              f_flow = f_flow,
+                              state_in = channel[i, j].stateFlow,
+                              state_out = channel[i, j+1].stateFlow,
+                              pv = node[i, j].pv,
+                              Dv = Dv[i, j]);
+      
       node[i, j].Q_in = -alfa[i, j] * deltaSFlow * (node[i, j].stateFlow.T - heat[i, j].T);
       heat[i, j].Q_flow = node[i, j].Q_in;
       if mod(ceil(i / zahod), 2) == 1 then

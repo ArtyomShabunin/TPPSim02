@@ -3,13 +3,13 @@ within TPPSim02.HeatExchanger.Tests;
 model GasSideHE2D_Test
   package Medium = TPPSim02.Media.ExhaustGas;
   
-  parameter Integer numberOfTubeSections = 3 "Число участков разбиения трубы" annotation(
+  parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
     Dialog(group = "Параметры разбиения"));
   parameter Integer numberOfFlueSections = 4 "Число участков разбиения газохода" annotation(
     Dialog(group = "Параметры разбиения")); 
   
   Modelica.Fluid.Sources.FixedBoundary boundary_in(redeclare package Medium = Medium, T = 50 + 273.15, nPorts = 1) annotation(
-    Placement(visible = true, transformation(origin = {-72, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {-70, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_pT boundary_out(redeclare package Medium = Medium, T = 90 + 273.15, nPorts = 1, use_p_in = true) annotation(
     Placement(visible = true, transformation(origin = {50, -20}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Ramp ramp(duration = 100, height = 3e5, offset = 1e5, startTime = 100)  annotation(
@@ -26,7 +26,7 @@ equation
   connect(fixedTemperature.port, gasSideHE.heat) annotation(
     Line(points = {{-10, 20}, {-10, -6}}, color = {191, 0, 0}));
   connect(boundary_in.ports[1], gasSideHE.Input) annotation(
-    Line(points = {{-62, -20}, {-20, -20}}, color = {0, 127, 255}));
+    Line(points = {{-60, -20}, {-20, -20}}, color = {0, 127, 255}));
   connect(gasSideHE.Output, boundary_out.ports[1]) annotation(
     Line(points = {{0, -20}, {40, -20}}, color = {0, 127, 255}));
   annotation(

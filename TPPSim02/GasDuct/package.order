@@ -3,3 +3,4 @@ VolumeNode
 FlowNode
 OneNodeChannel
 NodesChannel
+GasSplitter

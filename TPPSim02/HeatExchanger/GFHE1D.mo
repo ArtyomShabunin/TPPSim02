@@ -2,7 +2,7 @@ within TPPSim02.HeatExchanger;
 
 model GFHE1D
   extends TPPSim02.HeatExchanger.Icons.IconHE;
-  extends TPPSim02.HeatExchanger.Icons.IconHE;
+  import TPPSim02.Choices.Dynamics;
   package Medium_G = TPPSim02.Media.ExhaustGas;
   package Medium_F = Modelica.Media.Water.StandardWater;
   outer ThermoPower.System system;
@@ -27,11 +27,11 @@ model GFHE1D
   parameter Modelica.SIunits.Length Lpiezo = 20.85 "Разность высот выходного и входного фланцев" annotation(
     Dialog(group = "Геометрия пучка"));
   //Конструктивные характеристики труб
-  inner parameter Modelica.SIunits.Diameter Din = 0.038 "Внутренний диаметр трубок теплообменника" annotation(
+  parameter Modelica.SIunits.Diameter Din = 0.038 "Внутренний диаметр трубок теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
-  inner parameter Modelica.SIunits.Length delta = 0.003 "Толщина стенки трубки теплообменника" annotation(
+  parameter Modelica.SIunits.Length delta = 0.003 "Толщина стенки трубки теплообменника" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
-  inner parameter Modelica.SIunits.Length ke = 0.00014 "Абсолютная эквивалентная шероховатость" annotation(
+  parameter Modelica.SIunits.Length ke = 0.00014 "Абсолютная эквивалентная шероховатость" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
   //Характеристики оребрения
   parameter Modelica.SIunits.Length delta_fin = 0.0008 "Средняя толщина ребра, м" annotation(
@@ -41,9 +41,9 @@ model GFHE1D
   parameter Modelica.SIunits.Length sfin = 0.00404 "Шаг ребер, м" annotation(
     Dialog(group = "Характеристики оребрения"));
   //Характеристики металла
-  inner parameter Modelica.SIunits.SpecificHeatCapacity C_m = 578.05 "Удельная теплоемкость металла" annotation(
+  parameter Modelica.SIunits.SpecificHeatCapacity C_m = 578.05 "Удельная теплоемкость металла" annotation(
     Dialog(group = "Характеристики металла"));
-  inner parameter Modelica.SIunits.ThermalConductivity lambda_m = 20 "Теплопроводность метала" annotation(
+  parameter Modelica.SIunits.ThermalConductivity lambda_m = 20 "Теплопроводность метала" annotation(
     Dialog(group = "Характеристики металла"));  
   parameter Modelica.SIunits.Density rho_m = 7800 "Плотность металла" annotation(
     Dialog(group = "Характеристики металла"));  
@@ -59,8 +59,17 @@ model GFHE1D
   parameter Modelica.SIunits.AbsolutePressure pout_gas_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
   parameter Modelica.SIunits.Temperature Tin_gas_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
   parameter Modelica.SIunits.Temperature Tout_gas_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
-  parameter Modelica.SIunits.MassFlowRate m_gas_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+  parameter Modelica.SIunits.MassFlowRate m_gas_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+
+  // Параметры уравнений динамики
+  parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics flowMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   
+  parameter Dynamics gasEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics gasMassDynamics = Dynamics.SteadyState "Параметры уравнения сохранения массы газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics gasMomentumDynamics = Dynamics.SteadyState "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));  
+    
   Modelica.Fluid.Interfaces.FluidPort_a gasIn(redeclare package Medium = Medium_G) annotation(
     Placement(visible = true, transformation(origin = {-50, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-52, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b gasOut(redeclare package Medium = Medium_G) annotation(
@@ -84,7 +93,10 @@ model GFHE1D
                                              pout_start = pout_gas_start,
                                              Tin_start = Tin_gas_start,
                                              Tout_start = Tout_gas_start,
-                                             m_flow_start = m_gas_flow_start)  annotation(
+                                             m_start = m_gas_start,
+                                             gasEnergyDynamics = gasEnergyDynamics,
+                                             gasMassDynamics = gasMassDynamics,
+                                             gasMomentumDynamics = gasMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {0, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.FlowSideHE1D flowSide(Din = Din,
                                                Lpiezo = Lpiezo,
@@ -98,7 +110,10 @@ model GFHE1D
                                                pout_start = pout_start,
                                                Tin_start = Tin_start,
                                                Tout_start = Tout_start,
-                                               m_flow_start = m_flow_start)  annotation(
+                                               m_flow_start = m_flow_start,
+                                               flowEnergyDynamics = flowEnergyDynamics,
+                                               flowMassDynamics = flowMassDynamics,
+                                               flowMomentumDynamics = flowMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.Thermal.CounterCurrent1D counterCurrent(Nv = Nv)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
