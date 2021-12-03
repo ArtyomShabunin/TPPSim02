@@ -67,8 +67,8 @@ model GFHE1D
   parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   
   parameter Dynamics gasEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
-  parameter Dynamics gasMassDynamics = Dynamics.SteadyState "Параметры уравнения сохранения массы газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
-  parameter Dynamics gasMomentumDynamics = Dynamics.SteadyState "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));  
+  parameter Dynamics gasMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics gasMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));  
     
   Modelica.Fluid.Interfaces.FluidPort_a gasIn(redeclare package Medium = Medium_G) annotation(
     Placement(visible = true, transformation(origin = {-50, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-52, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -119,8 +119,8 @@ model GFHE1D
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Thermal.TubeWall[Nv] wall(each L = Lpipe/Nv,
                                      each Nt = z1,
-                                     each Tstart1 = Tin_start,
-                                     each TstartN = Tout_start,
+                                     Tvolstart = if Nv == 1 then fill((Tin_start + Tout_start) / 2, Nv)
+                                                 else linspace(Tin_start, Tout_start, Nv),
                                      each  WallRes = false,
                                      each lambda = 20,
                                      each rext = (Din + 2 * delta) / 2,

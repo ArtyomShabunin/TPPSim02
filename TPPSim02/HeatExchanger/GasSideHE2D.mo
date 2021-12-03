@@ -69,8 +69,8 @@ model GasSideHE2D
   //Характеристики оребрения
   final parameter Real H_fin = (omega * deltaLpipe * (1 - delta_fin / sfin) + (2 * pi * (Dfin ^ 2 - Dout ^ 2) / 4 + pi * Dfin * delta_fin) * (deltaLpipe / sfin)) * z1 * zahod "Площадь оребренной поверхности";  
    
-  Modelica.Fluid.Interfaces.FluidPort_a[numberOfTubeSections] Input(redeclare package Medium = Medium) annotation(
-    Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Fluid.Interfaces.FluidPorts_a[numberOfTubeSections] Input(redeclare package Medium = Medium) annotation(
+    Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -40}, {10, 40}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -40}, {10, 40}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel(each Kaer = Kaer,
@@ -124,14 +124,5 @@ equation
     connect(Input[i], channel[1,i].Input);
     connect(channel[numberOfFlueSections+1,i].Output, Output);  
   end for;
-  
-//  for i in 1:numberOfTubeSections loop
-//    Input.m_flow / numberOfTubeSections + channel[1,i].Input.m_flow = 0;
-//    channel[1,i].Input.h_outflow = inStream(Input.h_outflow);
-//    channel[1,i].Input.Xi_outflow = inStream(Input.Xi_outflow);
-//  end for;
-//  Input.p = channel[1,1].Input.p;
-////  Input.h_outflow = inStream(channel[1,1].Input.h_outflow);
-////  Input.Xi_outflow = inStream(channel[1,1].Input.Xi_outflow);
 
 end GasSideHE2D;

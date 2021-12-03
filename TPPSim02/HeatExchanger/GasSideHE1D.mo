@@ -79,8 +79,10 @@ model GasSideHE1D
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.VolumeNode[Nv] node(each deltaVFlow = deltaVGas,
                                        each use_Q_in = true,
-                                       T_start = linspace(Tin_start, Tout_start, Nv),
-                                       p_start = linspace(pin_start, pout_start, Nv),
+                                       T_start = if Nv == 1 then fill((Tin_start + Tout_start)/ 2, Nv)
+                                                 else linspace(Tin_start, Tout_start, Nv),
+                                       p_start = if Nv == 1 then fill((pin_start + pout_start)/ 2, Nv)
+                                                 else linspace(pin_start, pout_start, Nv),
                                        each gasEnergyDynamics = gasEnergyDynamics,
                                        each gasMassDynamics = gasMassDynamics)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

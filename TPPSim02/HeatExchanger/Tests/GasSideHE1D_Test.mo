@@ -3,7 +3,7 @@ within TPPSim02.HeatExchanger.Tests;
 model GasSideHE1D_Test
   package Medium = TPPSim02.Media.ExhaustGas;
   
-  parameter Integer Nv = 1 "Число узлов" annotation(
+  parameter Integer Nv = 5 "Число узлов" annotation(
     Dialog(group = "Параметры разбиения"));
   
   Modelica.Fluid.Sources.FixedBoundary boundary_in(redeclare package Medium = Medium, T = 50 + 273.15, nPorts = 1) annotation(

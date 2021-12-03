@@ -31,6 +31,7 @@ equation
               f_flow=f_flow,
               deltaSFlow=deltaSFlow,
               stateFlow=node.stateFlow,
+              p = node.pv,
               t_m=heat.T,
               Dv=Dv);
 

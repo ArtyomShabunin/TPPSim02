@@ -60,8 +60,10 @@ model FlowSideHE1D
                                         each flowMomentumDynamics = flowMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Pipes.VolumeNode[Nv] node(each deltaVFlow = deltaVFlow, 
-                            h_start = linspace(Medium.specificEnthalpy_pT(pin_start,Tin_start),Medium.specificEnthalpy_pT(pout_start,Tout_start),Nv),
-                            p_start = linspace(pin_start, pout_start, Nv),
+                            h_start = if Nv == 1 then fill((Medium.specificEnthalpy_pT(pin_start,Tin_start) + Medium.specificEnthalpy_pT(pout_start,Tout_start)) / 2, Nv)
+                                      else linspace(Medium.specificEnthalpy_pT(pin_start,Tin_start),Medium.specificEnthalpy_pT(pout_start,Tout_start),Nv),
+                            p_start = if Nv == 1 then fill((pin_start + pout_start) / 2, Nv)
+                                      else linspace(pin_start, pout_start, Nv),
                             each use_Q_in = true,
                             each flowEnergyDynamics = flowEnergyDynamics,
                             each flowMassDynamics = flowMassDynamics)  annotation(

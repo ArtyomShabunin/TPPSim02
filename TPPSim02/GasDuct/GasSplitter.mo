@@ -1,6 +1,7 @@
 within TPPSim02.GasDuct;
 
 model GasSplitter
+  extends TPPSim02.GasDuct.Icons.IconGasSplitter;
   package Medium = TPPSim02.Media.ExhaustGas;
   parameter Integer numberOfTubeSections = 1;
   Modelica.Fluid.Interfaces.FluidPort_a Input(redeclare package Medium = Medium) annotation(

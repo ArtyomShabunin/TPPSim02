@@ -19,7 +19,7 @@ model HRSG2_Test
     Placement(visible = true, transformation(origin = {-36, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.MassFlowSource_T fw(redeclare package Medium = Medium_F, T = 50 + 273.15, nPorts = 1, use_m_flow_in = true) annotation(
     Placement(visible = true, transformation(origin = {44, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.GFHE1D evo(flowSide(redeclare function alpha_func = TPPSim02.Thermal.Alpha.alfaForEVO), Din = 38.1e-3, Lpiezo = 18.29, Lpipe = 18.29, Nv = 5, Tin_gas_start = 60 + 273.15, Tin_start = 60 + 273.15, Tout_gas_start = 60 + 273.15, Tout_start = 60 + 273.15, delta = 3.404e-3, delta_fin = 0.9906e-3, hfin = 15.88e-3, pin_start = 1e5 + 18.29 * 1000 * 9.8, s1 = 85.15e-3, s2 = 111.1e-3, sfin = 2.921e-3, z1 = 126, z2 = 16, zahod = 16) annotation(
+  TPPSim02.HeatExchanger.GFHE1D evo( Din = 38.1e-3, Lpiezo = 18.29, Lpipe = 18.29, Nv = 5, Tin_gas_start = 60 + 273.15, Tin_start = 60 + 273.15, Tout_gas_start = 60 + 273.15, Tout_start = 60 + 273.15, delta = 3.404e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 15.88e-3, pin_start = 1e5 + 18.29 * 1000 * 9.8, s1 = 85.15e-3, s2 = 111.1e-3, sfin = 2.921e-3, z1 = 126, z2 = 16, zahod = 16) annotation(
     Placement(visible = true, transformation(origin = {6, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
   TPPSim02.Pumps.DropLine pump(redeclare package Medium = Medium_F, Lpipe = 18.29)  annotation(
     Placement(visible = true, transformation(origin = {18, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

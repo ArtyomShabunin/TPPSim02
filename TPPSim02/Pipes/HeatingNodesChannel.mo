@@ -56,14 +56,14 @@ equation
 
   for i in 1:(numberOfVolumes) loop
     Dv[i] = abs(node[i].Input.m_flow-node[i].Output.m_flow)/2;
-//    node[i].Q_in = hfc_func(Din=Din,
-//                            f_flow=channel[i].f_flow,
-//                            deltaSFlow=pi*Din*n_parallel*Lpipe/numberOfVolumes,
-//                            stateFlow=node[i].stateFlow,
-//                            t_m=heat[i].T,
-//                            Dv=Dv[i]);
-    node[i].Q_in = 0;
 
+    node[i].Q_in = TPPSim02.Thermal.HeatFlowRates.hfrForPipeHeating(Din=Din,
+                                                                    f_flow=channel[i].f_flow,
+                                                                    deltaSFlow=pi*Din*n_parallel*Lpipe/numberOfVolumes,
+                                                                    stateFlow=node[i].stateFlow,
+                                                                    p = node[i].pv,
+                                                                    t_m=heat[i].T,
+                                                                    Dv=Dv[i]);
     heat[i].Q_flow = node[i].Q_in;
     
     connect(channel[i].Output, node[i].Input);

@@ -3,7 +3,7 @@ within TPPSim02.HeatExchanger.Tests;
 model FlowSideHE1D_Test
   package Medium = Modelica.Media.Water.StandardWater;
   
-  parameter Integer Nv = 1 "Число узлов" annotation(
+  parameter Integer Nv = 5 "Число узлов" annotation(
     Dialog(group = "Параметры разбиения")); 
   
   Modelica.Fluid.Sources.FixedBoundary boundary_in(redeclare package Medium = Medium, T = 50 + 273.15, nPorts = 1, p = 2e5) annotation(

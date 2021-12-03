@@ -1,9 +1,6 @@
 BaseClases
 Interfaces
 Tests
-ElementaryChannel
-PipeChannel
-Channel
 VolumeNode
 FlowNode
 OneNodeChannel

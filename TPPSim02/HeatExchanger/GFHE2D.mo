@@ -118,8 +118,8 @@ model GFHE2D
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Thermal.TubeWall[z2, numberOfTubeSections] wall(each L = Lpipe,
                                                            each Nt = z1,
-                                                           each Tstart1 = 40 + 273.15,
-                                                           each TstartN = 40 + 273.15,
+                                                           Tvolstart = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), z2, numberOfTubeSections)
+                                                                       else fill(linspace(Tin_start, Tout_start, numberOfTubeSections), z2),
                                                            each WallRes = false,
                                                            each lambda = 20,
                                                            each rext = (Din + 2 * delta) / 2,
