@@ -147,7 +147,7 @@ model BaseDrum
   Medium.SpecificEnthalpy hw "Энтальпия воды в водяном объеме";
   Medium.ThermodynamicState state_w "Термодинамическое состояние воды в водяном объеме";
   Real x_w "Степень сухости воды в водяном объеме";
-  Modelica.SIunits.Mass Gw(start = Gw_start, fixed = true, nominal = drumWaterVolume(Din / 2, L, Hw_start) * Medium.bubbleDensity(Medium.setSat_p(ps_start)), min = 0) "Масса воды в барабане";
+  Modelica.SIunits.Mass Gw(nominal = drumWaterVolume(Din / 2, L, Hw_start) * Medium.bubbleDensity(Medium.setSat_p(ps_start)), min = 0) "Масса воды в барабане";
   Medium.SaturationProperties sat_w "State vector to compute saturation properties для водяного объема";
   Medium.MassFlowRate D_w_circ "Вода поступающая в водяное пространство барабана из циркуляционных контуров ";
   Medium.MassFlowRate D_w_eco "Расход воды из экономайзера, с учетом выделившегося или дополнительно конденсировавшегося пара";

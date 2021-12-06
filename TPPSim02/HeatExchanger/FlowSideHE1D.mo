@@ -38,7 +38,11 @@ model FlowSideHE1D
   parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.SpecificEnthalpy hin_start = Medium.specificEnthalpy_pT(pin_start,Tin_start) "Начальная энтальпия на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+  parameter Medium.SpecificEnthalpy hout_start = Medium.specificEnthalpy_pT(pout_start,Tout_start) "Начальная энтальпия на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));  
   parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
+
+
 
   // Параметры уравнений динамики
   parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
@@ -60,8 +64,8 @@ model FlowSideHE1D
                                         each flowMomentumDynamics = flowMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Pipes.VolumeNode[Nv] node(each deltaVFlow = deltaVFlow, 
-                            h_start = if Nv == 1 then fill((Medium.specificEnthalpy_pT(pin_start,Tin_start) + Medium.specificEnthalpy_pT(pout_start,Tout_start)) / 2, Nv)
-                                      else linspace(Medium.specificEnthalpy_pT(pin_start,Tin_start),Medium.specificEnthalpy_pT(pout_start,Tout_start),Nv),
+                            h_start = if Nv == 1 then fill((hin_start + hout_start) / 2, Nv)
+                                      else linspace(hin_start, hout_start, Nv),
                             p_start = if Nv == 1 then fill((pin_start + pout_start) / 2, Nv)
                                       else linspace(pin_start, pout_start, Nv),
                             each use_Q_in = true,

@@ -15,7 +15,7 @@ model FlowNode
   // Параметры уравнений динамики
   parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   
-  Medium.MassFlowRate D_flow_v "Массовый расход потока вода/пар";
+  Medium.MassFlowRate D_flow_v(start = m_flow_start) "Массовый расход потока вода/пар";
   Modelica.SIunits.Velocity w_flow "Скорость потока в конечных объемах";
 
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";

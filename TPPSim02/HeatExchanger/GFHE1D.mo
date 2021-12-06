@@ -53,6 +53,8 @@ model GFHE1D
   parameter Modelica.SIunits.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.SpecificEnthalpy hin_start = Medium_F.specificEnthalpy_pT(pin_start,Tin_start) "Начальная энтальпия на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.SpecificEnthalpy hout_start = Medium_F.specificEnthalpy_pT(pout_start,Tout_start) "Начальная энтальпия на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));  
   parameter Modelica.SIunits.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   
   parameter Modelica.SIunits.AbsolutePressure pin_gas_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
@@ -108,8 +110,8 @@ model GFHE1D
                                                zahod = zahod,
                                                pin_start = pin_start,
                                                pout_start = pout_start,
-                                               Tin_start = Tin_start,
-                                               Tout_start = Tout_start,
+                                               hin_start = hin_start,
+                                               hout_start = hout_start,
                                                m_flow_start = m_flow_start,
                                                flowEnergyDynamics = flowEnergyDynamics,
                                                flowMassDynamics = flowMassDynamics,

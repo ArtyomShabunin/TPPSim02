@@ -20,8 +20,8 @@ model VolumeNode
   
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";
   
-  Medium.AbsolutePressure pv;
-  Medium.SpecificEnthalpy hv;
+  Medium.AbsolutePressure pv(start = p_start);
+  Medium.SpecificEnthalpy hv(start = h_start);
   Medium.SpecificEnthalpy[2] H;
     
   Medium.DerDensityByEnthalpy drdh;

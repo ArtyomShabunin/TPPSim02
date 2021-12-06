@@ -81,6 +81,9 @@ initial equation
     der(t_m_steam) = 0;
     der(hw) = 0;
   else
+    Gw = Gw_start;
+    h_dew = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(ps_start);
+    ps = ps_start;
 //    der(t_m_water) = 0;
     t_m_water = t_m_water_start;
     t_m_steam = t_m_steam_start;
