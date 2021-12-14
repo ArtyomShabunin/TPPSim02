@@ -17,7 +17,7 @@ model OnePHorizontalHRSG_Test
     Placement(visible = true, transformation(origin = {-30, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_pT fw(redeclare package Medium = Medium_F, T = 50 + 273.15, nPorts = 1, p = 15e6) annotation(
     Placement(visible = true, transformation(origin = {70, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  Modelica.Fluid.Valves.ValveCompressible steam_cv(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 500, m_flow(fixed = true)) annotation(
+  Modelica.Fluid.Valves.ValveCompressible steam_cv(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 150, m_flow(fixed = true)) annotation(
     Placement(visible = true, transformation(origin = {0, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant const(k = 1) annotation(
     Placement(visible = true, transformation(origin = {-30, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

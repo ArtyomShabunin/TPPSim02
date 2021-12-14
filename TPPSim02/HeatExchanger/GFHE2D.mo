@@ -58,6 +58,8 @@ model GFHE2D
   parameter Modelica.SIunits.AbsolutePressure pout_gas_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
   parameter Modelica.SIunits.Temperature Tin_gas_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
   parameter Modelica.SIunits.Temperature Tout_gas_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
+  parameter Modelica.SIunits.SpecificEnthalpy hin_start = Medium_F.specificEnthalpy_pT(pin_start,Tin_start) "Начальная энтальпия на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.SpecificEnthalpy hout_start = Medium_F.specificEnthalpy_pT(pout_start,Tout_start) "Начальная энтальпия на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam")); 
   parameter Modelica.SIunits.MassFlowRate m_gas_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization gas"));
 
 // Параметры уравнений динамики
@@ -112,7 +114,9 @@ model GFHE2D
                                                m_flow_start = m_flow_start,
                                                flowEnergyDynamics = flowEnergyDynamics,
                                                flowMassDynamics = flowMassDynamics,
-                                               flowMomentumDynamics = flowMomentumDynamics)  annotation(
+                                               flowMomentumDynamics = flowMomentumDynamics,
+                                               hin_start = hin_start,
+                                               hout_start = hout_start)  annotation(
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.Thermal.CounterCurrent2D counterCurrent(numberOfFlueSections = z2, numberOfTubeSections = numberOfTubeSections)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

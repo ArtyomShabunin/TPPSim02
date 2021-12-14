@@ -82,12 +82,10 @@ initial equation
     der(hw) = 0;
   else
     Gw = Gw_start;
-    h_dew = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(ps_start);
+//    h_dew = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(ps_start);
     ps = ps_start;
-//    der(t_m_water) = 0;
     t_m_water = t_m_water_start;
     t_m_steam = t_m_steam_start;
-//    hw =  Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(ps_start);
     hw =  min(Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(ps_start), Modelica.Media.Water.IF97_Utilities.h_pT(ps_start, t_m_water));
   end if;
 //der(Gw) = 0;

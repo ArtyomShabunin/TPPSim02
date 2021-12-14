@@ -13,11 +13,11 @@ model OnePHorizontalHRSG
   Modelica.Fluid.Interfaces.FluidPort_a gas_in(redeclare package Medium = Medium_G) annotation(
     Placement(visible = true, transformation(origin = {-100, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-300, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  TPPSim02.HeatExchanger.GFHE2D evo( Din = 38.1e-3, Lpipe = 18.29, Tin_gas_start(displayUnit = "K") = 333.15, Tin_start(displayUnit = "K") = 373.15, Tout_gas_start(displayUnit = "K") = 333.15, Tout_start(displayUnit = "K") = 373.15, delta = 3.404e-3, delta_fin = 0.9906e-3, hfin = 15.88e-3, numberOfTubeSections = 2, s1 = 85.15e-3, s2 = 111.1e-3, sfin = 2.921e-3, z1 = 126, z2 = 16, zahod = 16) annotation(
+  TPPSim02.HeatExchanger.GFHE2D evo( Din = 38.1e-3, Lpipe = 18.29, Tin_gas_start(displayUnit = "K") = 333.15, Tin_start(displayUnit = "K") = 363.15, Tout_gas_start(displayUnit = "K") = 333.15, Tout_start(displayUnit = "K") = 363.15, delta = 3.404e-3, delta_fin = 0.9906e-3, hfin = 15.88e-3, numberOfTubeSections = 1, s1 = 85.15e-3, s2 = 111.1e-3, sfin = 2.921e-3, z1 = 126, z2 = 16, zahod = 16) annotation(
     Placement(visible = true, transformation(origin = {-2, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
   TPPSim02.Pumps.DropLine pump(redeclare package Medium = Medium_F, Lpipe = 18.29) annotation(
     Placement(visible = true, transformation(origin = {12, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Shell.Drum drum(Din = 1.6, Dynamics = Modelica.Fluid.Types.Dynamics.FixedInitial, Hw_start = 0.34, L = 16.2, delta = 80e-3, ps_start = 1e5, t_m_steam_start = 100 + 273.15, t_m_water_start = 100 + 273.15) annotation(
+  TPPSim02.Shell.Drum drum(Din = 1.6, Dynamics = Modelica.Fluid.Types.Dynamics.FixedInitial, Hw_start = 0.34, L = 16.2, delta = 80e-3, t_m_water_start = 90 + 273.15) annotation(
     Placement(visible = true, transformation(origin = {4, -10}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant const(k = 0.3) annotation(
     Placement(visible = true, transformation(origin = {-50, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

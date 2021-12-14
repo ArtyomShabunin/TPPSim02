@@ -107,7 +107,7 @@ model BaseDrum
     Dialog(group = "Металл"));
   //Начальные значения
   parameter Modelica.SIunits.Length Hw_start = 0.5 "Начальное значение уровня воды в барабане";
-  parameter Medium.AbsolutePressure ps_start = system.p_ambient "Начальное значение давления пара в барабане";
+  parameter Medium.AbsolutePressure ps_start = system.p_start "Начальное значение давления пара в барабане";
   parameter Medium.AbsolutePressure pw_start = ps_start + 0.5 * Hw_start * Medium.bubbleDensity(Medium.setSat_p(ps_start)) * Modelica.Constants.g_n "Начальное значение давления пара в барабане";
   parameter Medium.Temperature t_m_steam_start = 100 + 273.15 "Начальная температура металла верха барабана";
   parameter Medium.Temperature t_m_water_start = 100 + 273.15 "Начальная температура металла низа барабана";  
