@@ -17,7 +17,22 @@ model HRSG1_Test
     Placement(visible = true, transformation(origin = {-30, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.MassFlowSource_T fw(redeclare package Medium = Medium_F, T = 50 + 273.15, nPorts = 1, use_m_flow_in = true) annotation(
     Placement(visible = true, transformation(origin = {50, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.GFHE2D evo( Din = 38.1e-3, Lpipe = 18.29, Tin_gas_start(displayUnit = "K") = 333.15, Tin_start(displayUnit = "K") = 373.15, Tout_gas_start(displayUnit = "K") = 333.15, Tout_start(displayUnit = "K") = 373.15, delta = 3.404e-3, delta_fin = 0.9906e-3, hfin = 15.88e-3, numberOfTubeSections = 2, s1 = 85.15e-3, s2 = 111.1e-3, sfin = 2.921e-3, z1 = 126, z2 = 16, zahod = 16) annotation(
+  TPPSim02.HeatExchanger.GFHE2D evo(
+                                    Din = 38.1e-3,
+                                    Lpipe = 18.29,
+                                    Tin_gas_start(displayUnit = "K") = 333.15,
+                                    Tin_start(displayUnit = "K") = 373.15,
+                                    Tout_gas_start(displayUnit = "K") = 333.15,
+                                    Tout_start(displayUnit = "K") = 373.15,
+                                    delta = 3.404e-3, delta_fin = 0.9906e-3,
+                                    hfin = 15.88e-3,
+                                    numberOfTubeSections = 2,
+                                    s1 = 85.15e-3,
+                                    s2 = 111.1e-3,
+                                    sfin = 2.921e-3,
+                                    z1 = 126,
+                                    z2 = 16,
+                                    zahod = 16) annotation(
     Placement(visible = true, transformation(origin = {-2, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
   TPPSim02.Pumps.DropLine pump(redeclare package Medium = Medium_F, Lpipe = 18.29) annotation(
     Placement(visible = true, transformation(origin = {12, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

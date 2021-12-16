@@ -57,7 +57,7 @@ model FlowSideHE2D
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[numberOfFlueSections, numberOfTubeSections] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode[numberOfFlueSections, numberOfTubeSections+1] channel(each Din = Din,
-                                                                                each deltaLpiezo = 0,
+                                                                                each deltaLpiezo = Lpiezo / (numberOfTubeSections+1),
                                                                                 each deltaLpipe = deltaLpipe,
                                                                                 each f_flow = f_flow,
                                                                                 each ke = ke,

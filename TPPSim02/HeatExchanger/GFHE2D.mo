@@ -48,7 +48,7 @@ model GFHE2D
   parameter Modelica.SIunits.Density rho_m = 7800 "Плотность металла" annotation(
     Dialog(group = "Характеристики металла"));  
 // Начальные параметры
-  parameter Modelica.SIunits.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.AbsolutePressure pin_start = system.p_start+9.8*1000*Lpiezo "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));

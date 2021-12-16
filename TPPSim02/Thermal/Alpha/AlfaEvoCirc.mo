@@ -1,6 +1,6 @@
 within TPPSim02.Thermal.Alpha;
 
-function alfaForEVO
+function alfaEvoCirc
   import Medium = Modelica.Media.Water.WaterIF97_ph;  
   
   input Modelica.SIunits.Diameter Din "Внутренний диаметр трубок теплообменника";
@@ -64,17 +64,17 @@ algorithm
   alfa_l := 0.023 * k_l / Din * Re_l ^ 0.8 * Pr_l ^ 0.4;
 
   // Перегревательный участок  
-  x_sh := if state_out.h < h_bubble then 0
-          elseif state_in.h > h_bubble then 1
-          else (state_out.h - h_bubble) / (state_out.h - state_in.h);
+//  x_sh := if state_out.h < h_bubble then 0
+//          elseif state_in.h > h_bubble then 1
+//          else (state_out.h - h_bubble) / (state_out.h - state_in.h);
        
-  k_v := Medium.thermalConductivity(state_out);
-  mu_v := Medium.dynamicViscosity(state_out);
-  Pr_v := Medium.prandtlNumber(state_out);
-  w_v := abs(Dv) / state_out.d / f_flow;
-  Re_v := w_v * Din * state_out.d / mu_v;
-  alfa_v := 0.023 * k_v / Din * Re_v ^ 0.8 * Pr_v ^ 0.4;
+//  k_v := Medium.thermalConductivity(state_out);
+//  mu_v := Medium.dynamicViscosity(state_out);
+//  Pr_v := Medium.prandtlNumber(state_out);
+//  w_v := abs(Dv) / state_out.d / f_flow;
+//  Re_v := w_v * Din * state_out.d / mu_v;
+//  alfa_v := 0.023 * k_v / Din * Re_v ^ 0.8 * Pr_v ^ 0.4;
    
-//  alfa_flow := max((1 - x_eco - x_sh) * 20000 + x_eco * alfa_l + x_sh * alfa_v, 0.1);
-  alfa_flow := 20000;
-end alfaForEVO;
+  alfa_flow := max((1 - x_eco) * 20000 + x_eco * alfa_l, 1000);
+
+end alfaEvoCirc;

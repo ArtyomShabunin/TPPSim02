@@ -4,11 +4,11 @@ model GFHE2D_Test
   package Medium_G = TPPSim02.Media.ExhaustGas;
   package Medium_F = Modelica.Media.Water.StandardWater;
 
-    TPPSim02.HeatExchanger.GFHE2D gfhe(gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState,
-                                       gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState,
-                                       m_gas_start = 50,
-                                       numberOfTubeSections = 2) annotation(
-    Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
+  TPPSim02.HeatExchanger.GFHE2D gfhe(gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState,
+                                     gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState,
+                                     m_gas_start = 50,
+                                     numberOfTubeSections = 2) annotation(
+  Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_pT gas_out(redeclare package Medium = Medium_G, nPorts = 1, p = 1e5) annotation(
     Placement(visible = true, transformation(origin = {70, 0}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_pT flow_in(redeclare package Medium = Medium_F, T = 40 + 273.15, nPorts = 1, p = 2e5) annotation(

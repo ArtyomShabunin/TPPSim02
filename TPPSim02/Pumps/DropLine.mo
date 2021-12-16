@@ -33,7 +33,9 @@ equation
   lambda_tr = 1 / (1.14 + 2 * log10(Din / ke)) ^ 2;
   Xi_flow = lambda_tr * Lpipe / Din;
   dp_fric = abs(w_flow) * w_flow * Xi_flow * stateFlow.d / 2 / system.g;
-  dp_piez = stateFlow.d * system.g * Lpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
+//  dp_piez = stateFlow.d * system.g * Lpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
+  dp_piez = 965.331 * system.g * Lpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
+
  
   port_b.p - port_a.p =  dp_piez - dp_fric; 
   port_a.m_flow = -port_b.m_flow;
