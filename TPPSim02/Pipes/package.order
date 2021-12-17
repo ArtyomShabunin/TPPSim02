@@ -6,3 +6,6 @@ FlowNode
 OneNodeChannel
 NodesChannel
 HeatingNodesChannel
+FlowNodeHeated
+VolumeNodeWH
+HeatingNodesChannel2
