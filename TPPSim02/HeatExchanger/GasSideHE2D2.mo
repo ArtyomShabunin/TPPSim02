@@ -1,6 +1,6 @@
 within TPPSim02.HeatExchanger;
 
-model GasSideHE2D
+model GasSideHE2D2
   extends TPPSim02.HeatExchanger.Icons.IconGasSideHE;
   import Modelica.Constants.pi;
   import TPPSim02.Choices.Dynamics;
@@ -70,45 +70,34 @@ model GasSideHE2D
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -40}, {10, 40}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -40}, {10, 40}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.FlowNode[numberOfFlueSections+1, numberOfTubeSections] channel(each Kaer = Kaer,
-                                                                                  each deltaLpiezo = 0,
-                                                                                  each deltaLpipe = s2,
-                                                                                  each f_flow = f_gas,
-                                                                                  each m_flow_start = m_start,
-                                                                                  each gasMomentumDynamics = gasMomentumDynamics)  annotation(
+  TPPSim02.GasDuct.FlowNodeHeated[numberOfFlueSections+1, numberOfTubeSections] channel(each Cs = Cs,
+        each Cz = Cz,
+        each Dout = Dout,
+        each H_fin = H_fin,
+        each Kaer = Kaer,
+        each deltaLpiezo = 0,
+        each deltaLpipe = s2,
+        each f_flow = f_gas,
+        each gasMomentumDynamics = gasMomentumDynamics,
+        each k_gamma_gas = k_gamma_gas,
+        each m_flow_start = m_start,
+        each n_fin = n_fin)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVGas,
-                                                                               each use_Q_in = true,
-                                                                               T_start = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), numberOfFlueSections, numberOfTubeSections)
-                                                                                         else fill(linspace(Tin_start, Tout_start, numberOfTubeSections), numberOfFlueSections),
-                                                                               p_start = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), numberOfFlueSections, numberOfTubeSections)
-                                                                                         else fill(linspace(pin_start, pout_start, numberOfTubeSections), numberOfFlueSections),
-                                                                               each gasEnergyDynamics = gasEnergyDynamics,
-                                                                               each gasMassDynamics = gasMassDynamics)   annotation(
+  TPPSim02.GasDuct.VolumeNodeWH[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVGas,
+     T_start = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), numberOfFlueSections, numberOfTubeSections)
+               else fill(linspace(Tin_start, Tout_start, numberOfTubeSections), numberOfFlueSections),
+     p_start = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), numberOfFlueSections, numberOfTubeSections)
+               else fill(linspace(pin_start, pout_start, numberOfTubeSections), numberOfFlueSections),
+     each gasEnergyDynamics = gasEnergyDynamics,
+     each gasMassDynamics = gasMassDynamics)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[numberOfFlueSections, numberOfTubeSections] heat annotation(
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[numberOfFlueSections+1, numberOfTubeSections] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  Medium.DynamicViscosity[numberOfFlueSections, numberOfTubeSections] mu "Динамическая вязкость газов";
-  Medium.ThermalConductivity[numberOfFlueSections, numberOfTubeSections] k "Коэффициент теплопроводности газов";
-  Modelica.SIunits.PerUnit[numberOfFlueSections, numberOfTubeSections] Re "Число Рейнольдса";
-  Medium.PrandtlNumber[numberOfFlueSections, numberOfTubeSections] Pr "Число Прандтля";
-  Modelica.SIunits.CoefficientOfHeatTransfer[numberOfFlueSections, numberOfTubeSections] alfa "Коэффициент теплопередачи со стороны потока газов";
-  Medium.MassFlowRate[numberOfFlueSections, numberOfTubeSections] Dv "Массовый расход потока";
 equation
 
   for i in 1:numberOfFlueSections loop
     for j in 1:numberOfTubeSections loop
-      
-      mu[i,j] = Medium.dynamicViscosity(node[i,j].stateFlow);
-      k[i,j] = Medium.thermalConductivity(node[i,j].stateFlow);
-      Pr[i,j] = Medium.prandtlNumber(node[i,j].stateFlow);
-      Dv[i,j] = abs(node[i,j].Input.m_flow-node[i,j].Output.m_flow)/2;
-      Re[i,j] = Dv[i,j] * Dout / (channel[i,j].f_flow * mu[i,j]);
-      alfa[i,j] = k_gamma_gas * 0.113 * Cs * Cz * k[i,j] / Dout * Re[i,j] ^ n_fin * Pr[i,j] ^ 0.33;
-
-      node[i,j].Q_in = -alfa[i,j] * H_fin * (node[i,j].Tv - heat[i,j].T);     
-      heat[i,j].Q_flow = node[i,j].Q_in;
          
       connect(channel[i,j].Output, node[i,j].Input);
       connect(node[i,j].Output, channel[i+1,j].Input);
@@ -120,5 +109,6 @@ equation
     connect(Input[i], channel[1,i].Input);
     connect(channel[numberOfFlueSections+1,i].Output, Output);  
   end for;
-
-end GasSideHE2D;
+  
+  connect(channel.heat, heat);
+end GasSideHE2D2;
