@@ -1,6 +1,6 @@
 within TPPSim02.Pipes;
 
-model FlowNodeHeated
+model FlowNodeFixFlow
   package Medium = Modelica.Media.Water.StandardWater;
   import TPPSim02.Choices.Dynamics;
   outer ThermoPower.System system;
@@ -13,13 +13,10 @@ model FlowNodeHeated
   parameter Modelica.SIunits.Area f_flow = 0.002 "Площадь для прохода теплоносителя";
   parameter Modelica.SIunits.Area deltaSFlow = 0.7 "Площадь поверхности теплообмена";
   parameter Modelica.SIunits.Length ke = 0.00014 "Абсолютная эквивалентная шероховатость";
+  parameter Medium.MassFlowRate D_flow_v = 10 "Массовый расход потока вода/пар";
+
+
   
-  parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
-  
-  // Параметры уравнений динамики
-  parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
-  
-  Medium.MassFlowRate D_flow_v(start = m_flow_start) "Массовый расход потока вода/пар";
   Modelica.SIunits.Velocity w_flow "Скорость потока в конечных объемах";
 
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";
@@ -53,12 +50,6 @@ equation
   dp_fric = abs(w_flow) * w_flow * Xi_flow * stateFlow.d / 2 / system.g;
   dp_piez = stateFlow.d * system.g * deltaLpiezo "Расчет перепада давления из-за изменения пьезометрической высоты";
 
-  if flowMomentumDynamics == Dynamics.SteadyState then
-    Input.p - Output.p = dp_fric + dp_piez;
-  else
-    Input.p - Output.p = dp_fric + dp_piez + der(D_flow_v) * deltaLpipe / f_flow;
-  end if;
-
   Input.m_flow = D_flow_v;
   Output.m_flow + Input.m_flow = 0;
 
@@ -83,12 +74,9 @@ equation
   
   Output.h_outflow = inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
   Input.h_outflow = inStream(Output.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
-initial equation
 
-  if flowMomentumDynamics == Dynamics.FixedInitial then
-    D_flow_v = m_flow_start;
-  end if;
 
   annotation(
     Icon(graphics = {Rectangle(lineColor = {116, 116, 116}, fillColor = {85, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.HorizontalCylinder, extent = {{-100, 40}, {100, -40}})}));
-end FlowNodeHeated;
+
+end FlowNodeFixFlow;

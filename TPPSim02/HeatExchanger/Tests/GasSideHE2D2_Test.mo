@@ -18,7 +18,7 @@ model GasSideHE2D2_Test
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.GasSideHE2D2 gasSideHE(gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, numberOfTubeSections = numberOfTubeSections) annotation(
     Placement(visible = true, transformation(origin = {-10, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature[numberOfFlueSections+1, numberOfTubeSections] fixedTemperature(each T = 50 + 273.15)  annotation(
+  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature[numberOfFlueSections, numberOfTubeSections] fixedTemperature(each T = 50 + 273.15)  annotation(
     Placement(visible = true, transformation(origin = {-10, 30}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
   GasDuct.GasSplitter gasSplitter(numberOfTubeSections = numberOfTubeSections)  annotation(
     Placement(visible = true, transformation(origin = {-42, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
