@@ -7,3 +7,4 @@ PipeWithWall_Test
 TwoPipeWithWall_Test
 FlowNodeHeated_Test
 HeatingNodesChannel2_Test
+FlowNodeFixFlow_Test

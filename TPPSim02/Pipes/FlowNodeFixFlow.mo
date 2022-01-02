@@ -58,17 +58,17 @@ equation
   Pr = Medium.prandtlNumber(stateFlow);
   Re = w_flow * Din * stateFlow.d / mu;
 
-  alfa=D_flow_v;
-//  alfa2 = alpha_func(w_flow = w_flow,
-//                    Din = Din,
-//                    k = k,
-//                    Re = Re,
-//                    Pr = Pr,
-//                    f_flow = f_flow,
-//                    state_in = Medium.setState_phX(Input.p, inStream(Input.h_outflow)),
-//                    state_out = Medium.setState_phX(Output.p,  inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small)),
-//                    pv = Output.p,
-//                    Dv = D_flow_v);
+//  alfa=D_flow_v;
+  alfa = alpha_func(w_flow = w_flow,
+                    Din = Din,
+                    k = k,
+                    Re = Re,
+                    Pr = Pr,
+                    f_flow = f_flow,
+                    state_in = Medium.setState_phX(Input.p, inStream(Input.h_outflow)),
+                    state_out = Medium.setState_phX(Output.p,  inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small)),
+                    pv = Output.p,
+                    Dv = D_flow_v);
                     
   heat.Q_flow = -alfa * deltaSFlow * (stateFlow.T - heat.T);
   

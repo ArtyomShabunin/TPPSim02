@@ -12,3 +12,5 @@ GFHE2D2
 GasSideHE1D2
 FlowSideHE1D2
 GFHE1D2
+FlowSideHEFixFlow
+EVOFixFlow
