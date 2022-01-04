@@ -16,7 +16,7 @@ model FlowSideHEFixFlow_Test
     Placement(visible = true, transformation(origin = {90, -12}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   inner TPPSim02.System system annotation(
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.FlowSideHEFixFlow flowSideHE(D_flow_v = {40, 42, 44, 50},Tin_start = 50 + 273.15, Tout_start = 50 + 273.15,m_flow_start = 160, numberOfTubeSections = numberOfTubeSections, pin_start = 2e5) annotation(
+  TPPSim02.HeatExchanger.FlowSideHEFixFlow flowSideHE(D_flow_v = {40, 42, 44, 50},Tin_start = 50 + 273.15, Tout_start = 50 + 273.15, numberOfTubeSections = numberOfTubeSections, pin_start = 2e5) annotation(
     Placement(visible = true, transformation(origin = {-10, -14}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Sources.FixedTemperature[numberOfFlueSections, numberOfTubeSections+1] fixedTemperature(each T = 50 + 273.15)  annotation(
     Placement(visible = true, transformation(origin = {-10, 30}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));

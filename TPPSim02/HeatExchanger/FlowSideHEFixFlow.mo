@@ -60,7 +60,7 @@ model FlowSideHEFixFlow
   TPPSim02.Pipes.FlowNodeFixFlow[numberOfFlueSections] channel_fix_flow(D_flow_v = D_flow_v, each Din = Din, each deltaLpiezo = Lpiezo / (numberOfTubeSections + 1), each deltaLpipe = deltaLpipe, each deltaSFlow = deltaSFlow, each f_flow = f_flow, each ke = ke)  annotation(
     Placement(visible = true, transformation(origin = {-30, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   
-  Pipes.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow,
+  Pipes.VolumeNodeWH[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow,
                                                                     h_start = if numberOfTubeSections == 1 then fill(fill((hin_start + hout_start) / 2, numberOfTubeSections), numberOfFlueSections)
                                                                               else fill(linspace(hin_start, hout_start, numberOfTubeSections), numberOfFlueSections),
                                                                     p_start = if numberOfTubeSections == 1 then fill(fill((pin_start + pout_start) / 2, numberOfTubeSections), numberOfFlueSections)
