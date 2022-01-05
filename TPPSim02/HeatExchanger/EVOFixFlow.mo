@@ -119,8 +119,8 @@ model EVOFixFlow
                                                hin_start = hin_start,
                                                hout_start = hout_start)  annotation(
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.CounterCurrent2D counterCurrent(numberOfFlueSections = z2, numberOfTubeSections = numberOfTubeSections)  annotation(
-    Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+//  TPPSim02.Thermal.CounterCurrent2D counterCurrent(numberOfFlueSections = z2, numberOfTubeSections = numberOfTubeSections)  annotation(
+//    Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Thermal.TubeWall[z2, numberOfTubeSections] wall(each L = Lpipe/numberOfTubeSections,
                                                            each Nt = z1,
                                                            Tvolstart = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), z2, numberOfTubeSections)
@@ -130,7 +130,7 @@ model EVOFixFlow
                                                            each rext = (Din + 2 * delta) / 2,
                                                            each rhomcm = 7800 * 650,
                                                            each rint = Din / 2) annotation(
-    Placement(visible = true, transformation(origin = {0, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.GasSplitter gasSplitter(numberOfTubeSections = numberOfTubeSections) annotation(
     Placement(visible = true, transformation(origin = {-30, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
@@ -141,14 +141,11 @@ equation
   connect(flowSide.Input, flowIn) annotation(
     Line(points = {{10, 50}, {50, 50}}, color = {0, 127, 255}));
   connect(wall.int, flowSide.heat) annotation(
-    Line(points = {{0, 20}, {0, 34}}, color = {191, 0, 0}));
-  connect(counterCurrent.side1, wall.ext) annotation(
-    Line(points = {{0, -12}, {0, 14}}, color = {191, 0, 0}, thickness = 0.5));
-  connect(counterCurrent.side2, gasSide.heat) annotation(
-    Line(points = {{0, -18}, {0, -36}}, color = {191, 0, 0}, thickness = 0.5));
+    Line(points = {{0, 3}, {0, 34}}, color = {191, 0, 0}));
   connect(gasIn, gasSplitter.Input) annotation(
     Line(points = {{-50, -50}, {-40, -50}}));
   connect(gasSplitter.Output, gasSide.Input) annotation(
     Line(points = {{-20, -50}, {-10, -50}}, color = {0, 127, 255}, thickness = 0.5));
-
+  connect(gasSide.heat, wall.ext) annotation(
+    Line(points = {{0, -36}, {0, -3}}, color = {191, 0, 0}, thickness = 0.5));
 end EVOFixFlow;

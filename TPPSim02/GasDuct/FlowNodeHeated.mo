@@ -24,6 +24,8 @@ model FlowNodeHeated
   Medium.MolarMass MM;
 
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";
+  Medium.ThermodynamicState stateInput "Термодинамическое состояние входного потока";
+  Medium.ThermodynamicState stateOutput "Термодинамическое состояние выходного потока";
   
   Real dp_fric "Потеря давления из-за сил трения"; 
   Real dp_piez "Перепад давления из-за изменения пьезометрической высоты"; 
@@ -47,6 +49,9 @@ model FlowNodeHeated
 equation
 
   stateFlow = Medium.setState_phX(Output.p, actualStream(Input.h_outflow), actualStream(Input.Xi_outflow));
+  stateInput = Medium.setState_phX(Input.p, actualStream(Input.h_outflow), actualStream(Input.Xi_outflow));
+  stateOutput = Medium.setState_phX(Output.p, actualStream(Output.h_outflow), actualStream(Output.Xi_outflow));
+
   
   d = Medium.density(stateFlow);
   mu = Medium.dynamicViscosity(stateFlow);
@@ -71,7 +76,7 @@ equation
   Re = D_flow_v * Dout / f_flow / mu;
   alfa = k_gamma_gas * 0.113 * Cs * Cz * k / Dout * Re ^ n_fin * Pr ^ 0.33;
 
-  heat.Q_flow = -alfa * H_fin * (stateFlow.T - heat.T);     
+  heat.Q_flow = -alfa * H_fin * (0.5*(stateInput.T + stateOutput.T) - heat.T);     
   
   Output.h_outflow = inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
   Input.h_outflow = inStream(Output.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
