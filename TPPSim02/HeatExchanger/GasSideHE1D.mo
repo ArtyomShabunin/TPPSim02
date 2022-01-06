@@ -70,52 +70,41 @@ model GasSideHE1D
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.GasDuct.FlowNode[Nv+1] channel(each Kaer = Kaer,
-                                          each deltaLpiezo = 0,
-                                          each deltaLpipe = s2 * z2 / Nv,
-                                          each f_flow = f_gas,
-                                          each m_flow_start = m_start,
-                                          each gasMomentumDynamics = gasMomentumDynamics)  annotation(
+  TPPSim02.GasDuct.FlowNode[Nv+1] channel(each Cs = Cs,
+                                                each Cz = Cz,
+                                                each Dout = Dout,
+                                                each H_fin = H_fin,
+                                                each Kaer = Kaer,
+                                                each deltaLpiezo = 0,
+                                                each deltaLpipe = s2 * z2 / Nv,
+                                                each f_flow = f_gas,
+                                                each gasMomentumDynamics = gasMomentumDynamics,
+                                                each k_gamma_gas = k_gamma_gas,
+                                                each m_flow_start = m_start,
+                                                each n_fin = n_fin)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.VolumeNode[Nv] node(each deltaVFlow = deltaVGas,
-                                       each use_Q_in = true,
-                                       T_start = if Nv == 1 then fill((Tin_start + Tout_start)/ 2, Nv)
-                                                 else linspace(Tin_start, Tout_start, Nv),
-                                       p_start = if Nv == 1 then fill((pin_start + pout_start)/ 2, Nv)
-                                                 else linspace(pin_start, pout_start, Nv),
-                                       each gasEnergyDynamics = gasEnergyDynamics,
-                                       each gasMassDynamics = gasMassDynamics)   annotation(
+                                         T_start = if Nv == 1 then fill((Tin_start + Tout_start)/ 2, Nv)
+                                                   else linspace(Tin_start, Tout_start, Nv),
+                                         p_start = if Nv == 1 then fill((pin_start + pout_start)/ 2, Nv)
+                                                   else linspace(pin_start, pout_start, Nv),
+                                         each gasEnergyDynamics = gasEnergyDynamics,
+                                         each gasMassDynamics = gasMassDynamics)   annotation(
     Placement(visible = true, transformation(origin = {50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[Nv] heat annotation(
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[Nv+1] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  Medium.DynamicViscosity[Nv] mu "Динамическая вязкость газов";
-  Medium.ThermalConductivity[Nv] k "Коэффициент теплопроводности газов";
-  Modelica.SIunits.PerUnit[Nv] Re "Число Рейнольдса";
-  Medium.PrandtlNumber[Nv] Pr "Число Прандтля";
-  Modelica.SIunits.CoefficientOfHeatTransfer[Nv] alfa "Коэффициент теплопередачи со стороны потока газов";
-  Medium.MassFlowRate[Nv] Dv "Массовый расход потока";
 
 equation
 
   for i in 1:Nv loop
-      
-    mu[i] = Medium.dynamicViscosity(node[i].stateFlow);
-    k[i] = Medium.thermalConductivity(node[i].stateFlow);
-    Pr[i] = Medium.prandtlNumber(node[i].stateFlow);
-    Dv[i] = abs(node[i].Input.m_flow-node[i].Output.m_flow)/2;
-    Re[i] = Dv[i] * Dout / (channel[i].f_flow * mu[i]);
-    alfa[i] = k_gamma_gas * 0.113 * Cs * Cz * k[i] / Dout * Re[i] ^ n_fin * Pr[i] ^ 0.33;
-
-    node[i].Q_in = -alfa[i] * H_fin * (node[i].Tv - heat[i].T);     
-    heat[i].Q_flow = node[i].Q_in;
-       
+            
     connect(channel[i].Output, node[i].Input);
     connect(node[i].Output, channel[i+1].Input);
       
   end for;
 
   connect(Input, channel[1].Input);
-  connect(channel[Nv+1].Output, Output);  
-
+  connect(channel[Nv+1].Output, Output);
+  connect(channel.heat, heat);
 end GasSideHE1D;

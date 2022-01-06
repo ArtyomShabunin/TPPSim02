@@ -80,7 +80,7 @@ model EVOFixFlow
     Placement(visible = true, transformation(origin = {50, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {40, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b flowOut(redeclare package Medium = Medium_F) annotation(
     Placement(visible = true, transformation(origin = {-50, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-40, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.GasSideHE2D2 gasSide(Dout = Din + 2*delta,
+  TPPSim02.HeatExchanger.GasSideHE2D gasSide(Dout = Din + 2*delta,
                                              Lpipe = Lpipe,
                                              delta_fin = delta_fin,
                                              hfin = hfin,

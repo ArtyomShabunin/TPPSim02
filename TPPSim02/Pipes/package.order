@@ -1,12 +1,7 @@
 BaseClases
 Interfaces
 Tests
-VolumeNode
-FlowNode
-OneNodeChannel
-NodesChannel
-HeatingNodesChannel
-FlowNodeHeated
-VolumeNodeWH
-HeatingNodesChannel2
 FlowNodeFixFlow
+FlowNode
+VolumeNode
+HeatingNodesChannel

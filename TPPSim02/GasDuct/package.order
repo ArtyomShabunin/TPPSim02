@@ -1,7 +1,5 @@
 Tests
-VolumeNode
-FlowNode
 GasSplitter
 Icons
-VolumeNodeWH
-FlowNodeHeated
+VolumeNode
+FlowNode

@@ -6,7 +6,7 @@ model FlowSideHE2D
   package Medium = Modelica.Media.Water.StandardWater;
   outer ThermoPower.System system;
   
-  replaceable function alpha_func = TPPSim02.Thermal.Alpha.alfaForSHandECO;
+//  replaceable function alpha_func = TPPSim02.Thermal.Alpha.alfaForSHandECO;
 
   // Параметры разбиения
   parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
@@ -54,57 +54,31 @@ model FlowSideHE2D
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[numberOfFlueSections, numberOfTubeSections] heat annotation(
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[numberOfFlueSections, numberOfTubeSections+1] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode[numberOfFlueSections, numberOfTubeSections+1] channel(each Din = Din,
-                                                                                each deltaLpiezo = Lpiezo / (numberOfTubeSections+1),
-                                                                                each deltaLpipe = deltaLpipe,
-                                                                                each f_flow = f_flow,
-                                                                                each ke = ke,
-                                                                                each m_flow_start = m_flow_start,
-                                                                                each flowMomentumDynamics = flowMomentumDynamics)  annotation(
+        each deltaLpiezo = Lpiezo / (numberOfTubeSections + 1),
+        each deltaLpipe = deltaLpipe,
+        each deltaSFlow = deltaSFlow,
+        each f_flow = f_flow,
+        each flowMomentumDynamics = flowMomentumDynamics,
+        each ke = ke,
+        each m_flow_start = m_flow_start)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Pipes.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow,
                                                                     h_start = if numberOfTubeSections == 1 then fill(fill((hin_start + hout_start) / 2, numberOfTubeSections), numberOfFlueSections)
                                                                               else fill(linspace(hin_start, hout_start, numberOfTubeSections), numberOfFlueSections),
                                                                     p_start = if numberOfTubeSections == 1 then fill(fill((pin_start + pout_start) / 2, numberOfTubeSections), numberOfFlueSections)
                                                                               else fill(linspace(pin_start, pout_start, numberOfTubeSections), numberOfFlueSections),
-                                                                    each use_Q_in = true,
                                                                     each flowEnergyDynamics = flowEnergyDynamics,
                                                                     each flowMassDynamics = flowMassDynamics)  annotation(
     Placement(visible = true, transformation(origin = {30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  Medium.DynamicViscosity[numberOfFlueSections, numberOfTubeSections] mu "Динамическая вязкость";
-  Medium.ThermalConductivity[numberOfFlueSections, numberOfTubeSections] k "Коэффициент теплопроводности";
-  Modelica.SIunits.PerUnit[numberOfFlueSections, numberOfTubeSections] Re "Число Рейнольдса";
-  Medium.PrandtlNumber[numberOfFlueSections, numberOfTubeSections] Pr "Число Прандтля";
-  Modelica.SIunits.CoefficientOfHeatTransfer[numberOfFlueSections, numberOfTubeSections] alfa "Коэффициент теплопередачи к потоку";
-  Medium.MassFlowRate[numberOfFlueSections, numberOfTubeSections] Dv "Массовый расход потока";
-  Modelica.SIunits.Velocity[numberOfFlueSections, numberOfTubeSections] w_flow "Скорость потока ";
 
 equation
   for i in 1:numberOfFlueSections loop
     for j in 1:numberOfTubeSections loop
-      mu[i, j] = Medium.dynamicViscosity(node[i, j].stateFlow);
-      k[i, j] = Medium.thermalConductivity(node[i, j].stateFlow);
-      Pr[i, j] = Medium.prandtlNumber(node[i, j].stateFlow);
-      Dv[i, j] = abs(node[i, j].Input.m_flow - node[i, j].Output.m_flow) / 2;
-      w_flow[i, j] = abs(Dv[i, j]) / node[i, j].stateFlow.d / f_flow;
-      Re[i, j] = w_flow[i, j] * Din * node[i, j].stateFlow.d / mu[i, j];
       
-      alfa[i, j] = alpha_func(w_flow = w_flow[i, j],
-                              Din = Din,
-                              k = k[i, j],
-                              Re = Re[i, j],
-                              Pr = Pr[i, j],
-                              f_flow = f_flow,
-                              state_in = channel[i, j].stateFlow,
-                              state_out = channel[i, j+1].stateFlow,
-                              pv = node[i, j].pv,
-                              Dv = Dv[i, j]);
-      
-      node[i, j].Q_in = -alfa[i, j] * deltaSFlow * (node[i, j].stateFlow.T - heat[i, j].T);
-      heat[i, j].Q_flow = node[i, j].Q_in;
       if mod(ceil(i / zahod), 2) == 1 then
 // нечетные ходы
         connect(channel[i, j].Output, node[i, j].Input);
@@ -137,5 +111,5 @@ equation
       connect(channel[numberOfFlueSections + 1 - i, 1].Output, Output);
     end if;
   end for;
-
+  connect(channel.heat, heat);
 end FlowSideHE2D;

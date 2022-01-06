@@ -69,8 +69,8 @@ model GFHE1D
   parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   
   parameter Dynamics gasEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
-  parameter Dynamics gasMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
-  parameter Dynamics gasMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));  
+  parameter Dynamics gasMassDynamics = Dynamics.SteadyState "Параметры уравнения сохранения массы газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics gasMomentumDynamics = Dynamics.SteadyState "Параметры уравнения сохранения момента газы" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));  
     
   Modelica.Fluid.Interfaces.FluidPort_a gasIn(redeclare package Medium = Medium_G) annotation(
     Placement(visible = true, transformation(origin = {-50, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-52, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -117,12 +117,12 @@ model GFHE1D
                                                flowMassDynamics = flowMassDynamics,
                                                flowMomentumDynamics = flowMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.CounterCurrent1D counterCurrent(Nv = Nv)  annotation(
+  TPPSim02.Thermal.CounterCurrent1D counterCurrent(Nv = Nv+1)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[Nv] wall(each L = Lpipe/Nv,
+  TPPSim02.Thermal.TubeWall[Nv+1] wall(each L = Lpipe/Nv,
                                      each Nt = z1,
-                                     Tvolstart = if Nv == 1 then fill((Tin_start + Tout_start) / 2, Nv)
-                                                 else linspace(Tin_start, Tout_start, Nv),
+                                     Tvolstart = if Nv == 1 then fill((Tin_start + Tout_start) / 2, Nv+1)
+                                                 else linspace(Tin_start, Tout_start, Nv+1),
                                      each  WallRes = false,
                                      each lambda = 20,
                                      each rext = (Din + 2 * delta) / 2,
@@ -144,4 +144,5 @@ equation
     Line(points = {{0, -12}, {0, 14}}, color = {191, 0, 0}, thickness = 0.5));
   connect(wall.int, flowSide.heat) annotation(
     Line(points = {{0, 20}, {0, 34}}, color = {191, 0, 0}, thickness = 0.5));
+
 end GFHE1D;

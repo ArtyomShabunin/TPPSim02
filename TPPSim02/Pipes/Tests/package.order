@@ -1,10 +1,8 @@
-Node_Test
-Channel2_Test
-PipeChannel_Test2
-PipeChannel_Test3
-PipeChannel_Test4
 PipeWithWall_Test
 TwoPipeWithWall_Test
 FlowNodeHeated_Test
-HeatingNodesChannel2_Test
 FlowNodeFixFlow_Test
+VolumeNode_Test
+FlowNode_Test
+PipeChannel_Test1
+PipeChannel_Test2

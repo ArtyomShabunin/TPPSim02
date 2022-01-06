@@ -9,14 +9,10 @@ model TwoPipeWithWall_Test
     Placement(visible = true, transformation(origin = {-30, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.HeatingNodesChannel channel2(Tin_start = 20 + 273.15, Tout_start = 30 + 273.15, numberOfVolumes = numberOfVolumes) annotation(
     Placement(visible = true, transformation(origin = {10, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[numberOfVolumes] wall1(each L = 1 * 10, each Tstart1 = 40 + 273.15, each TstartN = 40 + 273.15, each lambda = 20, each rext = 0.301 / 2, each rhomcm = 7800 * 650, each rint = 0.3 / 2) annotation(
+  TPPSim02.Thermal.TubeWall[numberOfVolumes+1] wall1(each L = 1 * 10, each Tstart1 = 40 + 273.15, each TstartN = 40 + 273.15, each lambda = 20, each rext = 0.301 / 2, each rhomcm = 7800 * 650, each rint = 0.3 / 2) annotation(
     Placement(visible = true, transformation(origin = {-30, 10}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[numberOfVolumes] wall2(each L = 1 * 10, each Tstart1 = 40 + 273.15, each TstartN = 40 + 273.15, each lambda = 20, each rext = 0.301 / 2, each rhomcm = 7800 * 650, each rint = 0.3 / 2) annotation(
+  TPPSim02.Thermal.TubeWall[numberOfVolumes+1] wall2(each L = 1 * 10, each Tstart1 = 40 + 273.15, each TstartN = 40 + 273.15, each lambda = 20, each rext = 0.301 / 2, each rhomcm = 7800 * 650, each rint = 0.3 / 2) annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Sources.FixedHeatFlow[numberOfVolumes] fixedHeatFlow1(each Q_flow = 0) annotation(
-    Placement(visible = true, transformation(origin = {-30, 40}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
-  Modelica.Thermal.HeatTransfer.Sources.FixedHeatFlow[numberOfVolumes] fixedHeatFlow2(each Q_flow = 0) annotation(
-    Placement(visible = true, transformation(origin = {10, 40}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
   Modelica.Fluid.Sources.Boundary_pT boundary_out(redeclare package Medium = Medium, T = 90 + 273.15, nPorts = 1, use_p_in = true)  annotation(
     Placement(visible = true, transformation(origin = {50, -20}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Ramp ramp(duration = 100, height = 3e5, offset = 1e5, startTime = 100)  annotation(
@@ -36,10 +32,6 @@ equation
     Line(points = {{-30, 8}, {-30, -16}}, color = {191, 0, 0}, thickness = 0.5));
   connect(wall2.int, channel2.heat) annotation(
     Line(points = {{10, 8}, {10, -16}}, color = {191, 0, 0}, thickness = 0.5));
-  connect(fixedHeatFlow1.port, wall1.ext) annotation(
-    Line(points = {{-30, 30}, {-30, 14}}, color = {191, 0, 0}, thickness = 0.5));
-  connect(fixedHeatFlow2.port, wall2.ext) annotation(
-    Line(points = {{10, 30}, {10, 14}}, color = {191, 0, 0}, thickness = 0.5));
   annotation(
     experiment(StartTime = 0, StopTime = 1000, Tolerance = 1e-03, Interval = 0.2));
 end TwoPipeWithWall_Test;

@@ -2,7 +2,7 @@ within TPPSim02.GasDuct.Tests;
 
 model VolumeNode_Test
   package Medium = TPPSim02.Media.ExhaustGas;
-  TPPSim02.GasDuct.VolumeNode node(Q = 0)  annotation(
+  TPPSim02.GasDuct.VolumeNode node  annotation(
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   inner Modelica.Fluid.System system annotation(
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

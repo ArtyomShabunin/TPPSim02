@@ -8,7 +8,7 @@ model FlowNodeHeated_Test
     Placement(visible = true, transformation(origin = {70, 0}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Ramp ramp(duration = 100, height = 3e5, offset = 1e5, startTime = 100) annotation(
     Placement(visible = true, transformation(origin = {70, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  FlowNodeHeated flowNodeHeated annotation(
+  FlowNode flowNodeHeated annotation(
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Thermal.TubeWall wall1(L = 1 * 10, Tstart1 = 40 + 273.15, TstartN = 40 + 273.15, lambda = 20, rext = 0.301 / 2, rhomcm = 7800 * 650, rint = 0.3 / 2) annotation(
     Placement(visible = true, transformation(origin = {0, 30}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));

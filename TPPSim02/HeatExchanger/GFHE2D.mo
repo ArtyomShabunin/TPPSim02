@@ -103,7 +103,7 @@ model GFHE2D
                                                Lpipe = Lpipe,
                                                Lpiezo = Lpiezo,
                                                ke = ke,
-                                               numberOfTubeSections = numberOfTubeSections,
+                                               numberOfTubeSections = numberOfTubeSections-1,
                                                z1 = z1,
                                                z2 = z2,
                                                zahod = zahod,
@@ -120,7 +120,7 @@ model GFHE2D
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.Thermal.CounterCurrent2D counterCurrent(numberOfFlueSections = z2, numberOfTubeSections = numberOfTubeSections)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[z2, numberOfTubeSections] wall(each L = Lpipe,
+  TPPSim02.Thermal.TubeWall[z2, numberOfTubeSections] wall(each L = Lpipe/numberOfTubeSections,
                                                            each Nt = z1,
                                                            Tvolstart = if numberOfTubeSections == 1 then fill(0.5 *(Tin_start + Tout_start), z2, numberOfTubeSections)
                                                                        else fill(linspace(Tin_start, Tout_start, numberOfTubeSections), z2),
@@ -149,4 +149,5 @@ equation
     Line(points = {{-50, -50}, {-40, -50}}));
   connect(gasSplitter.Output, gasSide.Input) annotation(
     Line(points = {{-20, -50}, {-10, -50}}, color = {0, 127, 255}, thickness = 0.5));
+
 end GFHE2D;

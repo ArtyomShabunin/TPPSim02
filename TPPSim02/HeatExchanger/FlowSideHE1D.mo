@@ -52,12 +52,13 @@ model FlowSideHE1D
     Placement(visible = true, transformation(origin = {-100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[Nv] heat annotation(
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[Nv+1] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode[Nv+1] channel(each Din = Din,
                                         each deltaLpiezo = Lpiezo / (Nv+1),
                                         each deltaLpipe = Lpipe * z2 / zahod / (Nv+1),
                                         each f_flow = f_flow,
+                                        each deltaSFlow = deltaSFlow,
                                         each ke = ke,
                                         each m_flow_start = m_flow_start,
                                         each flowMomentumDynamics = flowMomentumDynamics)  annotation(
@@ -67,42 +68,14 @@ model FlowSideHE1D
                                       else linspace(hin_start, hout_start, Nv),
                             p_start = if Nv == 1 then fill((pin_start + pout_start) / 2, Nv)
                                       else linspace(pin_start, pout_start, Nv),
-                            each use_Q_in = true,
                             each flowEnergyDynamics = flowEnergyDynamics,
                             each flowMassDynamics = flowMassDynamics)  annotation(
     Placement(visible = true, transformation(origin = {30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  Medium.DynamicViscosity[Nv] mu "Динамическая вязкость";
-  Medium.ThermalConductivity[Nv] k "Коэффициент теплопроводности";
-  Modelica.SIunits.PerUnit[Nv] Re "Число Рейнольдса";
-  Medium.PrandtlNumber[Nv] Pr "Число Прандтля";
-  Modelica.SIunits.CoefficientOfHeatTransfer[Nv] alfa "Коэффициент теплопередачи к потоку";
-  Medium.MassFlowRate[Nv] Dv "Массовый расход потока";
-  Modelica.SIunits.Velocity[Nv] w_flow "Скорость потока ";
 
 equation
 
   for i in 1:Nv loop
-    mu[i] = Medium.dynamicViscosity(node[i].stateFlow);
-    k[i] = Medium.thermalConductivity(node[i].stateFlow);
-    Pr[i] = Medium.prandtlNumber(node[i].stateFlow);
-    Dv[i] = abs(node[i].Input.m_flow - node[i].Output.m_flow) / 2;
-    w_flow[i] = abs(Dv[i]) / node[i].stateFlow.d / f_flow;
-    Re[i] = w_flow[i] * Din * node[i].stateFlow.d / mu[i];
-    
-    alfa[i] = alpha_func(w_flow = w_flow[i],
-                         Din = Din,
-                         k = k[i],
-                         Re = Re[i],
-                         Pr = Pr[i],
-                         f_flow = f_flow,
-                         state_in = channel[i].stateFlow,
-                         state_out = channel[i+1].stateFlow,
-                         pv = node[i].pv,
-                         Dv = Dv[i]);
-          
-    node[i].Q_in = -alfa[i] * deltaSFlow * (node[i].stateFlow.T - heat[i].T);
-    heat[i].Q_flow = node[i].Q_in;
 
     connect(channel[i].Output, node[i].Input);
     connect(node[i].Output, channel[i + 1].Input);
@@ -110,7 +83,7 @@ equation
   end for;
 
 //Вход и выход
-    connect(Input, channel[1].Input);
-    connect(channel[Nv + 1].Output, Output);
-
+  connect(Input, channel[1].Input);
+  connect(channel[Nv + 1].Output, Output);
+  connect(channel.heat, heat);
 end FlowSideHE1D;

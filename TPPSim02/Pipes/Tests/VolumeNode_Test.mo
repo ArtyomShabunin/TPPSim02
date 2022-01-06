@@ -1,6 +1,6 @@
 within TPPSim02.Pipes.Tests;
 
-model Node_Test
+model VolumeNode_Test
   package Medium = Modelica.Media.Water.StandardWater;
   TPPSim02.Pipes.VolumeNode node(Q = 0)  annotation(
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -25,4 +25,4 @@ equation
     Line(points = {{-78, 70}, {-42, 70}}, color = {0, 0, 127}));
   connect(gain.y, boundary_out.m_flow_in) annotation(
     Line(points = {{-18, 70}, {88, 70}, {88, 8}, {80, 8}}, color = {0, 0, 127}));
-end Node_Test;
+end VolumeNode_Test;

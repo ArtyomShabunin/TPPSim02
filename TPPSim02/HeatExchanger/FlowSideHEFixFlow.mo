@@ -55,12 +55,12 @@ model FlowSideHEFixFlow
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[numberOfFlueSections, numberOfTubeSections+1] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Pipes.FlowNodeHeated[numberOfFlueSections, numberOfTubeSections] channel(each Din = Din, each deltaLpiezo = Lpiezo / (numberOfTubeSections + 1), each deltaLpipe = deltaLpipe, each deltaSFlow = deltaSFlow, each f_flow = f_flow, each flowMomentumDynamics = flowMomentumDynamics, each ke = ke, m_flow_start = transpose(fill(D_flow_v, numberOfTubeSections)))  annotation(
+  TPPSim02.Pipes.FlowNode[numberOfFlueSections, numberOfTubeSections] channel(each Din = Din, each deltaLpiezo = Lpiezo / (numberOfTubeSections + 1), each deltaLpipe = deltaLpipe, each deltaSFlow = deltaSFlow, each f_flow = f_flow, each flowMomentumDynamics = flowMomentumDynamics, each ke = ke, m_flow_start = transpose(fill(D_flow_v, numberOfTubeSections)))  annotation(
     Placement(visible = true, transformation(origin = {-30, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNodeFixFlow[numberOfFlueSections] channel_fix_flow(D_flow_v = D_flow_v, each Din = Din, each deltaLpiezo = Lpiezo / (numberOfTubeSections + 1), each deltaLpipe = deltaLpipe, each deltaSFlow = deltaSFlow, each f_flow = f_flow, each ke = ke)  annotation(
     Placement(visible = true, transformation(origin = {-30, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   
-  Pipes.VolumeNodeWH[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow,
+  Pipes.VolumeNode[numberOfFlueSections, numberOfTubeSections] node(each deltaVFlow = deltaVFlow,
                                                                     h_start = if numberOfTubeSections == 1 then fill(fill((hin_start + hout_start) / 2, numberOfTubeSections), numberOfFlueSections)
                                                                               else fill(linspace(hin_start, hout_start, numberOfTubeSections), numberOfFlueSections),
                                                                     p_start = if numberOfTubeSections == 1 then fill(fill((pin_start + pout_start) / 2, numberOfTubeSections), numberOfFlueSections)
