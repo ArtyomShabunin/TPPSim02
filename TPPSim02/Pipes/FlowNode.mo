@@ -42,7 +42,6 @@ model FlowNode
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heat annotation(
     Placement(visible = true, transformation(origin = {0, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  Real Q1;
 equation
 
   stateFlow = Medium.setState_phX(Output.p, 0.5*(inStream(Input.h_outflow)+inStream(Output.h_outflow)));
@@ -79,9 +78,6 @@ equation
                     pv = Output.p,
                     Dv = D_flow_v);                    
   heat.Q_flow = -alfa * deltaSFlow * (stateFlow.T - heat.T);
-//  heat.Q_flow = 0;
-  Q1 = -alfa * deltaSFlow * (stateFlow.T - heat.T);
-
   
   Output.h_outflow = inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
   Input.h_outflow = inStream(Output.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
