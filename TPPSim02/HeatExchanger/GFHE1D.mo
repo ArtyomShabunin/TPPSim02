@@ -6,12 +6,13 @@ model GFHE1D
   package Medium_G = TPPSim02.Media.ExhaustGas;
   package Medium_F = Modelica.Media.Water.StandardWater;
   outer ThermoPower.System system;
+  
+  replaceable function alpha_func = TPPSim02.Thermal.Alpha.alfaForSHandECO;
+  
   //Параметры разбиения
   parameter Integer Nv = 1 "Число узлов" annotation(
     Dialog(group = "Параметры разбиения")); 
   // Геометрия пучка
-  //  parameter TPPSim.Choices.HRSG_type HRSG_type_set = Choices.HRSG_type.horizontalBottom "Геометрия пучка (горизонтальный/вертикальный)" annotation(
-  //    Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length s1 = 82e-3 "Поперечный шаг" annotation(
     Dialog(group = "Геометрия пучка"));
   parameter Modelica.SIunits.Length s2 = 110e-3 "Продольный шаг" annotation(
@@ -100,7 +101,8 @@ model GFHE1D
                                              gasMassDynamics = gasMassDynamics,
                                              gasMomentumDynamics = gasMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {0, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.HeatExchanger.FlowSideHE1D flowSide(Din = Din,
+  TPPSim02.HeatExchanger.FlowSideHE1D flowSide(redeclare function alpha_func = alpha_func,
+                                               Din = Din,
                                                Lpiezo = Lpiezo,
                                                Lpipe = Lpipe,
                                                ke = ke,
@@ -119,15 +121,9 @@ model GFHE1D
     Placement(visible = true, transformation(origin = {0, 44}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.Thermal.CounterCurrent1D counterCurrent(Nv = Nv+1)  annotation(
     Placement(visible = true, transformation(origin = {0, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Thermal.TubeWall[Nv+1] wall(each L = Lpipe/Nv,
-                                     each Nt = z1,
+  TPPSim02.Thermal.TubeWall[Nv+1] wall(each L = Lpipe * z2 / zahod / (Nv + 1), each Nt = z1 * zahod,
                                      Tvolstart = if Nv == 1 then fill((Tin_start + Tout_start) / 2, Nv+1)
-                                                 else linspace(Tin_start, Tout_start, Nv+1),
-                                     each  WallRes = false,
-                                     each lambda = 20,
-                                     each rext = (Din + 2 * delta) / 2,
-                                     each rhomcm = 7800 * 650,
-                                     each rint = Din / 2) annotation(
+                                                 else linspace(Tin_start, Tout_start, Nv+1), each WallRes = false, each lambda = 20, each rext = (Din + 2 * delta) / 2, each rhomcm = 7800 * 650, each rint = Din / 2) annotation(
     Placement(visible = true, transformation(origin = {0, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   connect(flowSide.Output, flowOut) annotation(

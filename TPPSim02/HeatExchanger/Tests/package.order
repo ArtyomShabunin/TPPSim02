@@ -4,11 +4,5 @@ GFHE2D_Test
 GasSideHE1D_Test
 FlowSideHE1D_Test
 GFHE1D_Test
-GasSideHE2D2_Test
-FlowSideHE2D2_Test
-GFHE2D2_Test
-GasSideHE1D2_Test
-FlowSideHE1D2_Test
-GFHE1D2_Test
 FlowSideHEFixFlow_Test
 EVOFixFlow_Test

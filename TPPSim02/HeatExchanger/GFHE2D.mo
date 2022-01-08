@@ -150,4 +150,6 @@ equation
   connect(gasSplitter.Output, gasSide.Input) annotation(
     Line(points = {{-20, -50}, {-10, -50}}, color = {0, 127, 255}, thickness = 0.5));
 
+annotation(
+    Icon(graphics = {Line(points = {{-120, 120}, {120, -120}}, color = {255, 0, 0}, thickness = 2), Line(origin = {-81.7996, 4.85254}, points = {{202, 114}, {-38, -124}}, color = {255, 0, 0}, thickness = 2)}));
 end GFHE2D;

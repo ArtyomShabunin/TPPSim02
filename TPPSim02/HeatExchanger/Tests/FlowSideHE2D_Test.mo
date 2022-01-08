@@ -3,7 +3,7 @@ within TPPSim02.HeatExchanger.Tests;
 model FlowSideHE2D_Test
   package Medium = Modelica.Media.Water.StandardWater;
   
-  parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
+  parameter Integer numberOfTubeSections = 3 "Число участков разбиения трубы" annotation(
     Dialog(group = "Параметры разбиения"));
   parameter Integer numberOfFlueSections = 4 "Число участков разбиения газохода" annotation(
     Dialog(group = "Параметры разбиения")); 

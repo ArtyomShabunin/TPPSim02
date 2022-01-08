@@ -30,7 +30,7 @@ model FlowSideHE1D
 
   // Расчетные параметры
   final parameter Modelica.SIunits.Area f_flow = Modelica.Constants.pi * Din ^ 2 * z1 * zahod / 4 "Площадь для прохода теплоносителя";
-  final parameter Modelica.SIunits.Area deltaSFlow = Lpipe * Modelica.Constants.pi * Din * z1 * z2 / Nv "Внутренняя площадь одного участка";
+  final parameter Modelica.SIunits.Area deltaSFlow = Lpipe * Modelica.Constants.pi * Din * z1 * z2 / (Nv+1) "Внутренняя площадь одного участка";
   final parameter Modelica.SIunits.Volume deltaVFlow = Lpipe * f_flow * z2 / zahod / Nv "Внутренний объем одного участка ряда труб";
 
   // Начальные параметры
@@ -41,7 +41,6 @@ model FlowSideHE1D
   parameter Medium.SpecificEnthalpy hin_start = Medium.specificEnthalpy_pT(pin_start,Tin_start) "Начальная энтальпия на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.SpecificEnthalpy hout_start = Medium.specificEnthalpy_pT(pout_start,Tout_start) "Начальная энтальпия на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));  
   parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
-
 
   // Параметры уравнений динамики
   parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
@@ -54,7 +53,8 @@ model FlowSideHE1D
     Placement(visible = true, transformation(origin = {100, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[Nv+1] heat annotation(
     Placement(visible = true, transformation(origin = {10, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TPPSim02.Pipes.FlowNode[Nv+1] channel(each Din = Din,
+  TPPSim02.Pipes.FlowNode[Nv+1] channel(redeclare function alpha_func = alpha_func,
+                                        each Din = Din,
                                         each deltaLpiezo = Lpiezo / (Nv+1),
                                         each deltaLpipe = Lpipe * z2 / zahod / (Nv+1),
                                         each f_flow = f_flow,

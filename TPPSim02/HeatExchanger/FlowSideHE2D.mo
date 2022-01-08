@@ -5,15 +5,13 @@ model FlowSideHE2D
   import TPPSim02.Choices.Dynamics;
   package Medium = Modelica.Media.Water.StandardWater;
   outer ThermoPower.System system;
-  
-//  replaceable function alpha_func = TPPSim02.Thermal.Alpha.alfaForSHandECO;
-
+  //  replaceable function alpha_func = TPPSim02.Thermal.Alpha.alfaForSHandECO;
   // Параметры разбиения
   parameter Integer numberOfTubeSections = 1 "Число участков разбиения трубы" annotation(
     Dialog(group = "Параметры разбиения"));
   final parameter Integer numberOfFlueSections = z2 "Число участков разбиения газохода" annotation(
     Dialog(group = "Параметры разбиения"));   
-  // Геометрия пучка
+// Геометрия пучка
   parameter Integer zahod = 1 "Заходность труб теплообменника" annotation(
     Dialog(group = "Геометрия пучка"));
   parameter Integer z1 = 126 "Число труб по ширине газохода" annotation(
@@ -30,13 +28,13 @@ model FlowSideHE2D
   parameter Modelica.SIunits.Length ke = 0.00014 "Абсолютная эквивалентная шероховатость" annotation(
     Dialog(group = "Конструктивные характеристики труб"));
 
-  // Расчетные параметры
+// Расчетные параметры
   final parameter Modelica.SIunits.Area f_flow = Modelica.Constants.pi * Din ^ 2 * z1 / 4 "Площадь для прохода теплоносителя";
   final parameter Modelica.SIunits.Length deltaLpipe = Lpipe / numberOfTubeSections "Длина теплообменной трубки для элемента разбиения";
   final parameter Modelica.SIunits.Area deltaSFlow = deltaLpipe * Modelica.Constants.pi * Din * z1 "Внутренняя площадь одного участка ряда труб";
   final parameter Modelica.SIunits.Volume deltaVFlow = deltaLpipe * f_flow "Внутренний объем одного участка ряда труб";
 
-  // Начальные параметры
+// Начальные параметры
   parameter Medium.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
@@ -45,7 +43,7 @@ model FlowSideHE2D
   parameter Medium.SpecificEnthalpy hout_start = Medium.specificEnthalpy_pT(pout_start,Tout_start) "Начальная энтальпия на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization")); 
   parameter Medium.MassFlowRate m_flow_start = system.m_flow_start "Начальное значение массового расхода" annotation(Evaluate=true,Dialog(tab = "Initialization"));
 
-  // Параметры уравнений динамики
+// Параметры уравнений динамики
   parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   parameter Dynamics flowMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
   parameter Dynamics flowMomentumDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения момента вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
@@ -78,7 +76,6 @@ model FlowSideHE2D
 equation
   for i in 1:numberOfFlueSections loop
     for j in 1:numberOfTubeSections loop
-      
       if mod(ceil(i / zahod), 2) == 1 then
 // нечетные ходы
         connect(channel[i, j].Output, node[i, j].Input);
@@ -112,4 +109,6 @@ equation
     end if;
   end for;
   connect(channel.heat, heat);
+annotation(
+    Icon(graphics = {Line(points = {{-120, 120}, {120, -120}}, color = {255, 0, 0}, thickness = 2), Line(origin = {-81.7996, 4.85254},points = {{202, 114}, {-38, -124}}, color = {255, 0, 0}, thickness = 2)}));
 end FlowSideHE2D;
