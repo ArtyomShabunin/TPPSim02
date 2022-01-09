@@ -28,6 +28,6 @@ equation
   connect(fixedTemperature.port, flowSideHE1D.heat) annotation(
     Line(points = {{-10, 20}, {-10, -4}}, color = {191, 0, 0}, thickness = 0.5));
   annotation(
-    experiment(StartTime = 0, StopTime = 1000, Tolerance = 1e-03, Interval = 0.2));
+    experiment(StartTime = 0, StopTime = 1000, Tolerance = 1e-6, Interval = 0.01));
 
 end FlowSideHE1D_Test;

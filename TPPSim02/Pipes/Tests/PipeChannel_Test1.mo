@@ -14,6 +14,10 @@ model PipeChannel_Test1
     Placement(visible = true, transformation(origin = {0, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode channelB annotation(
     Placement(visible = true, transformation(origin = {50, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature fixedTemperature(T = 100 + 273.15) annotation(
+    Placement(visible = true, transformation(origin = {-50, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature fixedTemperature1(T = 100 + 273.15) annotation(
+    Placement(visible = true, transformation(origin = {50, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   connect(boundary_in.ports[1], channelA.Input) annotation(
     Line(points = {{-80, 0}, {-60, 0}, {-60, 0}, {-60, 0}}, color = {0, 127, 255}));
@@ -23,6 +27,12 @@ equation
     Line(points = {{10, 0}, {38, 0}, {38, 0}, {40, 0}}, color = {0, 127, 255}));
   connect(channelB.Output, boundary_out.ports[1]) annotation(
     Line(points = {{60, 0}, {78, 0}, {78, 0}, {80, 0}}, color = {0, 127, 255}));
+  connect(channelA.heat, fixedTemperature.port) annotation(
+    Line(points = {{-50, 4}, {-50, 20}, {-30, 20}, {-30, 50}, {-40, 50}}, color = {191, 0, 0}));
+  connect(channelB.heat, fixedTemperature1.port) annotation(
+    Line(points = {{50, 4}, {50, 20}, {70, 20}, {70, 52}, {60, 52}}, color = {191, 0, 0}));
+  connect(node.heat, fixedTemperature.port) annotation(
+    Line(points = {{0, 10}, {0, 50}, {-40, 50}}, color = {191, 0, 0}));
   annotation(
     experiment(StartTime = 0, StopTime = 1000, Tolerance = 1e-06, Interval = 0.1));
 end PipeChannel_Test1;

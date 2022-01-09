@@ -6,11 +6,13 @@ model VolumeNode
   outer ThermoPower.System system;
   
   parameter Modelica.SIunits.Volume deltaVFlow = 1 "Внутренний объем узла";
+  parameter Modelica.SIunits.Area deltaSFlow = 0.7 "Площадь поверхности теплообмена";
   parameter Medium.AbsolutePressure p_start = system.p_start "Начальное давление" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.SpecificEnthalpy h_start = 1e5 "Начальная энтальпия" annotation(Evaluate=true,Dialog(tab = "Initialization"));
-
   // Параметры уравнений динамики
-  parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
+  parameter Dynamics flowEnergyDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения энергии вода/пар" annotation(
+    Evaluate = true,
+    Dialog(tab = "Assumptions", group = "Water/Steam dynamics"));
   parameter Dynamics flowMassDynamics = Dynamics.FixedInitial "Параметры уравнения сохранения массы вода/пар" annotation(Evaluate=true, Dialog(tab = "Assumptions", group="Water/Steam dynamics"));
     
   Medium.ThermodynamicState stateFlow "Термодинамическое состояние потока";
@@ -26,6 +28,11 @@ model VolumeNode
     Placement(visible = true, transformation(origin = {-100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 8.88178e-16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b Output(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, -2}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heat annotation(
+    Placement(visible = true, transformation(origin = {0, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+
+  Modelica.SIunits.CoefficientOfHeatTransfer alfa "Коэффициент теплопередачи при кондуктивном теплообмене";
+
 
 equation
 
@@ -36,7 +43,7 @@ equation
   if flowEnergyDynamics == Dynamics.SteadyState then
     H[2] + H[1] = 0;
   else
-    deltaVFlow * stateFlow.d * der(hv) = H[2] + H[1];
+    deltaVFlow * stateFlow.d * der(hv) = H[2] + H[1] + heat.Q_flow;
   end if;
   
   if flowMassDynamics == Dynamics.SteadyState then
@@ -44,6 +51,9 @@ equation
   else
     Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdh * der(hv);
   end if;
+  
+  alfa = 10;
+  heat.Q_flow = -alfa * deltaSFlow * (stateFlow.T - heat.T);
 
   H[1] = semiLinear(Input.m_flow, inStream(Input.h_outflow), Input.h_outflow);
   H[2] = semiLinear(Output.m_flow, inStream(Output.h_outflow), Output.h_outflow);

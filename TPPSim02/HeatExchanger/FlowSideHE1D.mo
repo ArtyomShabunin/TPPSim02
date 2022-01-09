@@ -63,7 +63,8 @@ model FlowSideHE1D
                                         each m_flow_start = m_flow_start,
                                         each flowMomentumDynamics = flowMomentumDynamics)  annotation(
     Placement(visible = true, transformation(origin = {-30, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Pipes.VolumeNode[Nv] node(each deltaVFlow = deltaVFlow, 
+  Pipes.VolumeNode[Nv] node(each deltaVFlow = deltaVFlow,
+                            each deltaSFlow = deltaSFlow,
                             h_start = if Nv == 1 then fill((hin_start + hout_start) / 2, Nv)
                                       else linspace(hin_start, hout_start, Nv),
                             p_start = if Nv == 1 then fill((pin_start + pout_start) / 2, Nv)
@@ -86,4 +87,5 @@ equation
   connect(Input, channel[1].Input);
   connect(channel[Nv + 1].Output, Output);
   connect(channel.heat, heat);
+  connect(node.heat, heat[1:Nv]);
 end FlowSideHE1D;
