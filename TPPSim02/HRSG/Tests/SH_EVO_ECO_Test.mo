@@ -7,7 +7,7 @@ model SH_EVO_ECO_Test
     Placement(visible = true, transformation(origin = {-76, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant N_set(k = 372.621e6) annotation(
     Placement(visible = true, transformation(origin = {-76, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  inner TPPSim02.System system annotation(
+  inner TPPSim02.System system(m_flow_small = 1e-1)  annotation(
     Placement(visible = true, transformation(origin = {90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Shell.Drum drum(Din = 1.6, Dynamics = Modelica.Fluid.Types.Dynamics.FixedInitial, Hw_start = 0.34, L = 16.2, delta = 80e-3, t_m_steam_start = 100 + 273.15, t_m_water_start = 100 + 273.15) annotation(
     Placement(visible = true, transformation(origin = {10, -16}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
@@ -25,7 +25,7 @@ model SH_EVO_ECO_Test
     Placement(visible = true, transformation(origin = {50, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.GFHE1D sh(Din = 38.1e-3, Lpiezo = 0, Lpipe = 18.29, Nv = 5, Tin_gas_start(displayUnit = "K") = 100 + 273.15, Tin_start(displayUnit = "K") = 100 + 273.15, Tout_gas_start(displayUnit = "K") = 100 + 273.15, Tout_start(displayUnit = "K") = 100 + 273.15, delta = 3.048e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 12.7e-3, hin_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), hout_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), s1 = 89.39e-3, s2 = 111.1e-3, sfin = 5.412e-3, z1 = 120, z2 = 6, zahod = 1) annotation(
     Placement(visible = true, transformation(origin = {-20, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
-  Modelica.Blocks.Continuous.LimPID pid(Ti = 120, controllerType = Modelica.Blocks.Types.SimpleController.PI, initType = Modelica.Blocks.Types.InitPID.InitialOutput, k = 100, limitsAtInit = true, yMax = 30, yMin = 0, y_start = 0)  annotation(
+  Modelica.Blocks.Continuous.LimPID pid(Ti = 120, controllerType = Modelica.Blocks.Types.SimpleController.PI, initType = Modelica.Blocks.Types.InitPID.InitialOutput, k = 100, limitsAtInit = true, yMax = 50, yMin = 0, y_start = 0)  annotation(
     Placement(visible = true, transformation(origin = {24, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant const(k = 0.3)  annotation(
     Placement(visible = true, transformation(origin = {-74, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -93,5 +93,5 @@ equation
   connect(fw.ports[1], volumeNode2.Input) annotation(
     Line(points = {{34, 30}, {28, 30}, {28, 12}, {70, 12}, {70, 0}}, color = {0, 127, 255}));
   annotation(
-    experiment(StartTime = 0, StopTime = 4000, Tolerance = 1e-06, Interval = 0.1));
+    experiment(StartTime = 0, StopTime = 5000, Tolerance = 1e-06, Interval = 0.1));
 end SH_EVO_ECO_Test;

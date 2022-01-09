@@ -52,7 +52,7 @@ equation
     Input.m_flow + Output.m_flow = deltaVFlow * drdp * der(pv) + deltaVFlow * drdh * der(hv);
   end if;
   
-  alfa = 10;
+  alfa = 100;
   heat.Q_flow = -alfa * deltaSFlow * (stateFlow.T - heat.T);
 
   H[1] = semiLinear(Input.m_flow, inStream(Input.h_outflow), Input.h_outflow);
