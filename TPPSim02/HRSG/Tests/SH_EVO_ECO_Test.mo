@@ -93,5 +93,5 @@ equation
   connect(fw.ports[1], volumeNode2.Input) annotation(
     Line(points = {{34, 30}, {28, 30}, {28, 12}, {70, 12}, {70, 0}}, color = {0, 127, 255}));
   annotation(
-    experiment(StartTime = 0, StopTime = 5000, Tolerance = 1e-06, Interval = 0.1));
+    experiment(StartTime = 0, StopTime = 5000, Tolerance = 1e-03, Interval = 0.1));
 end SH_EVO_ECO_Test;

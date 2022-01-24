@@ -79,8 +79,8 @@ equation
                     Dv = D_flow_v);                    
   heat.Q_flow = -alfa * deltaSFlow * (stateFlow.T - heat.T);
   
-  Output.h_outflow = inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
-  Input.h_outflow = inStream(Output.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small);
+  Output.h_outflow = max(min(inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small), 4100e3), 4e3);
+  Input.h_outflow = max(min(inStream(Output.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small), 4100e3), 4e3);
 initial equation
 
   if flowMomentumDynamics == Dynamics.FixedInitial then
