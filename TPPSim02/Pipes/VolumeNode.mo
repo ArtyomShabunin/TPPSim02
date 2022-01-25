@@ -37,8 +37,11 @@ model VolumeNode
 equation
 
   stateFlow = Medium.setState_phX(pv, hv);
-  drdp = min(0.00004, Medium.density_derp_h(stateFlow));
-  drdh = max(-0.0002, Medium.density_derh_p(stateFlow));
+//  drdp = min(0.00004, Medium.density_derp_h(stateFlow));
+//  drdh = max(-0.0002, Medium.density_derh_p(stateFlow));
+  drdp = Medium.density_derp_h(stateFlow);
+  drdh = Medium.density_derh_p(stateFlow);
+
 
   if flowEnergyDynamics == Dynamics.SteadyState then
     H[2] + H[1] = 0;

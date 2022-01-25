@@ -78,7 +78,9 @@ equation
                     pv = Output.p,
                     Dv = D_flow_v);                    
   heat.Q_flow = -alfa * deltaSFlow * (stateFlow.T - heat.T);
-  
+
+  assert(Output.h_outflow > 4e3 and Output.h_outflow < 4100e3, "Энтальпия вышла за допустимые границы", AssertionLevel.warning);
+  assert(Input.h_outflow > 4e3 and Input.h_outflow < 4100e3, "Энтальпия вышла за допустимые границы", AssertionLevel.warning);    
   Output.h_outflow = max(min(inStream(Input.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small), 4100e3), 4e3);
   Input.h_outflow = max(min(inStream(Output.h_outflow) + heat.Q_flow / max(abs(D_flow_v), system.m_flow_small), 4100e3), 4e3);
 initial equation
