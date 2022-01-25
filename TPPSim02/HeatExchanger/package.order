@@ -8,3 +8,4 @@ GFHE2D
 GasSideHE1D
 FlowSideHE1D
 GFHE1D
+ParallelGFHE1D
