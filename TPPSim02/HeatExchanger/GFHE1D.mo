@@ -50,7 +50,7 @@ model GFHE1D
     Dialog(group = "Характеристики металла"));  
 
   // Начальные параметры
-  parameter Modelica.SIunits.AbsolutePressure pin_start = pout_start+system.g*1000*Lpiezo "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
+  parameter Modelica.SIunits.AbsolutePressure pin_start = pout_start+system.g*960*Lpiezo "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
   parameter Modelica.SIunits.Temperature Tout_start = system.T_start "Начальная температура на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization water/steam"));
