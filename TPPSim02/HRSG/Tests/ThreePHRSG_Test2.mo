@@ -125,7 +125,7 @@ model ThreePHRSG_Test2
     Placement(visible = true, transformation(origin = {-350, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant constant4(k = 1) annotation(
     Placement(visible = true, transformation(origin = {-96, 94}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Fluid.Valves.ValveCompressible checkValve(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.OpPoint, dp_nominal = 0.5e5, filteredOpening = true, m_flow_nominal = 17.83, p_nominal = 71e5, rho_nominal = 11.44, riseTime = 300) annotation(
+  Modelica.Fluid.Valves.ValveCompressible checkValve(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.OpPoint, checkValve = true, dp_nominal(displayUnit = "Pa") = 0.5e5, filteredOpening = true, m_flow_nominal = 17.83, p_nominal = 71e5, rho_nominal = 11.44, riseTime = 300) annotation(
     Placement(visible = true, transformation(origin = {-130, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant constant7(k = 0) annotation(
     Placement(visible = true, transformation(origin = {-178, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
