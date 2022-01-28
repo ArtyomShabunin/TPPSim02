@@ -72,6 +72,6 @@ initial equation
   end if;
 
 annotation(
-    Icon(graphics = {Ellipse(lineColor = {85, 255, 255}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Sphere, extent = {{-20, 20}, {20, -20}})}));
+    Icon(graphics = {Ellipse(lineColor = {0, 85, 255}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Sphere, extent = {{-20, 20}, {20, -20}})}));
 
 end VolumeNode2;

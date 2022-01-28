@@ -33,8 +33,6 @@ model ThreePHRSG_Test2
     Placement(visible = true, transformation(origin = {-106, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
   TPPSim02.Pipes.VolumeNode volumeNode(flowMassDynamics = TPPSim02.Choices.Dynamics.SteadyState,h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), p_start = system.p_start + 960 * system.g * (18.29 + 0.34)) annotation(
     Placement(visible = true, transformation(origin = {-116, -78}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.Pipes.VolumeNode volumeNode1(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start)) annotation(
-    Placement(visible = true, transformation(origin = {-174, -10}, extent = {{10, -10}, {-10, 10}}, rotation = -90)));
   TPPSim02.GasDuct.VolumeNode gas_node(T_start = 100 + 273.15, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState) annotation(
     Placement(visible = true, transformation(origin = {234, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.GasDuct.FlowNode gas_duct(gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState) annotation(
@@ -102,13 +100,11 @@ model ThreePHRSG_Test2
   TPPSim02.Pipes.VolumeNode volumeNode11(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start)) annotation(
     Placement(visible = true, transformation(origin = {94, -28}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.GFHE1D rh_1(Din = 50.8e-3, Lpiezo = 0, Lpipe = 18.29, Nv = 5, Tin_gas_start(displayUnit = "K") = 100 + 273.15, Tin_start(displayUnit = "K") = 100 + 273.15, Tout_gas_start(displayUnit = "K") = 100 + 273.15, Tout_start(displayUnit = "K") = 100 + 273.15, delta = 2.667e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 12.7e-3, hin_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), hout_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), s1 = 89.39e-3, s2 = 111.1e-3, sfin = 3.123e-3, z1 = 120, z2 = 1, zahod = 1) annotation(
-    Placement(visible = true, transformation(origin = {-210, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {-196, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Constant constant6(k = 1) annotation(
     Placement(visible = true, transformation(origin = {-310, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.VolumeNode2 volumeNode21( h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start),nPorts = 3)  annotation(
-    Placement(visible = true, transformation(origin = {-206, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-//  Modelica.Fluid.Valves.ValveCompressible ip_cv(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.OpPoint, checkValve = true, dp_nominal(displayUnit = "Pa") = 0.5e5, filteredOpening = true, m_flow_nominal = 17.83, p_nominal = 71e5, rho_nominal = 11.44, riseTime = 300) annotation(
-//    Placement(visible = true, transformation(origin = {-92, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {-192, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Valves.ValveCompressible vent_CV(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.OpPoint, dp_nominal(displayUnit = "Pa") = 2.98e+06, filteredOpening = true, m_flow_nominal = 17.83, p_nominal = 29.8e+05, rho_nominal = 11.44, riseTime = 600) annotation(
     Placement(visible = true, transformation(origin = {-50, 30}, extent = {{10, -10}, {-10, 10}}, rotation = -90)));
   TPPSim02.Pipes.VolumeNode2 volumeNode22(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 3) annotation(
@@ -116,19 +112,49 @@ model ThreePHRSG_Test2
   Modelica.Fluid.Valves.ValveCompressible IP_RS(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 1800, dp_nominal(displayUnit = "Pa") = 3e+06, m_flow_start = system.m_flow_small, p_nominal = 60e5) annotation(
     Placement(visible = true, transformation(origin = {-290, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   TPPSim02.Pipes.VolumeNode2 volumeNode23(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 2) annotation(
-    Placement(visible = true, transformation(origin = {-238, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {-264, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Valves.ValveCompressible HP_RS(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 600, dp_nominal = 9e+06, m_flow_start = system.m_flow_small) annotation(
     Placement(visible = true, transformation(origin = {-210, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Fluid.Valves.ValveCompressible LP_RS(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.Kv, Kv = 1800, dp_nominal(displayUnit = "Pa") = 3e+06, m_flow_start = system.m_flow_small, p_nominal = 60e5) annotation(
     Placement(visible = true, transformation(origin = {-290, -124}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_ph steam_out(redeclare package Medium = Medium_F, h = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), p = system.p_start, nPorts = 3)  annotation(
     Placement(visible = true, transformation(origin = {-350, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Constant constant4(k = 1) annotation(
-    Placement(visible = true, transformation(origin = {-96, 94}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Valves.ValveCompressible checkValve(redeclare package Medium = Medium_F, CvData = Modelica.Fluid.Types.CvTypes.OpPoint, checkValve = true, dp_nominal(displayUnit = "Pa") = 0.5e5, filteredOpening = true, m_flow_nominal = 17.83, p_nominal = 71e5, rho_nominal = 11.44, riseTime = 300) annotation(
     Placement(visible = true, transformation(origin = {-130, 30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Constant constant7(k = 0) annotation(
-    Placement(visible = true, transformation(origin = {-178, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Constant constant7(k = 1e5) annotation(
+    Placement(visible = true, transformation(origin = {-194, 68}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  TPPSim02.HeatExchanger.GFHE1D hp_sh_2(Din = 38.1e-3, Lpiezo = 0, Lpipe = 18.29, Nv = 5, Tin_gas_start(displayUnit = "K") = 100 + 273.15, Tin_start(displayUnit = "K") = 100 + 273.15, Tout_gas_start(displayUnit = "K") = 100 + 273.15, Tout_start(displayUnit = "K") = 100 + 273.15, delta = 3.048e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 12.7e-3, hin_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), hout_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), s1 = 89.39e-3, s2 = 111.1e-3, sfin = 5.412e-3, z1 = 120, z2 = 6, zahod = 1) annotation(
+    Placement(visible = true, transformation(origin = {-220, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0))); 
+  TPPSim02.HeatExchanger.GFHE1D hp_sh_3(Din = 38.1e-3, Lpiezo = 0, Lpipe = 18.29, Nv = 5, Tin_gas_start(displayUnit = "K") = 100 + 273.15, Tin_start(displayUnit = "K") = 100 + 273.15, Tout_gas_start(displayUnit = "K") = 100 + 273.15, Tout_start(displayUnit = "K") = 100 + 273.15, delta = 4.775e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 12.7e-3, hin_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), hout_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), s1 = 89.39e-3, s2 = 111.1e-3, sfin = 4.48e-3, z1 = 120, z2 = 6, zahod = 1) annotation(
+    Placement(visible = true, transformation(origin = {-270, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
+  TPPSim02.HeatExchanger.GFHE1D rh_2(Din = 50.8e-3, Lpiezo = 0, Lpipe = 18.29, Nv = 5, Tin_gas_start(displayUnit = "K") = 100 + 273.15, Tin_start(displayUnit = "K") = 100 + 273.15, Tout_gas_start(displayUnit = "K") = 100 + 273.15, Tout_start(displayUnit = "K") = 100 + 273.15, delta = 2.667e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 12.7e-3, hin_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), hout_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), s1 = 89.39e-3, s2 = 111.1e-3, sfin = 4.677e-3, z1 = 120, z2 = 3, zahod = 1) annotation(
+    Placement(visible = true, transformation(origin = {-244, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));  
+  TPPSim02.HeatExchanger.GFHE1D rh_3(Din = 50.8e-3, Lpiezo = 0, Lpipe = 18.29, Nv = 5, Tin_gas_start(displayUnit = "K") = 100 + 273.15, Tin_start(displayUnit = "K") = 100 + 273.15, Tout_gas_start(displayUnit = "K") = 100 + 273.15, Tout_start(displayUnit = "K") = 100 + 273.15, delta = 2.667e-3, delta_fin = 0.9906e-3, gasMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, gasMomentumDynamics = TPPSim02.Choices.Dynamics.SteadyState, hfin = 12.7e-3, hin_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), hout_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), s1 = 89.39e-3, s2 = 111.1e-3, sfin = 3.235e-3, z1 = 120, z2 = 2, zahod = 1) annotation(
+    Placement(visible = true, transformation(origin = {-290, -50}, extent = {{-10, -10}, {11, 10}}, rotation = 0)));
+  TPPSim02.Pipes.VolumeNode2 volumeNode24(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 2) annotation(
+    Placement(visible = true, transformation(origin = {-218, -24}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  TPPSim02.Pipes.VolumeNode2 volumeNode25(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 2) annotation(
+    Placement(visible = true, transformation(origin = {-264, -24}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  TPPSim02.Pipes.VolumeNode2 volumeNode26(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 2) annotation(
+    Placement(visible = true, transformation(origin = {-180, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  TPPSim02.Pipes.VolumeNode2 volumeNode27(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 2) annotation(
+    Placement(visible = true, transformation(origin = {-254, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  TPPSim02.Pipes.VolumeNode2 volumeNode28(h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(system.p_start), nPorts = 2) annotation(
+    Placement(visible = true, transformation(origin = {-274, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Fluid.Sensors.RelativePressure relativePressure(redeclare package Medium = Medium_F) annotation(
+    Placement(visible = true, transformation(origin = {-160, 14}, extent = {{10, 10}, {-10, -10}}, rotation = 0)));
+  Modelica.Blocks.Continuous.LimPID limPID2(Ti = 120, controllerType = Modelica.Blocks.Types.SimpleController.PI, initType = Modelica.Blocks.Types.InitPID.InitialOutput, k = 1e-6, limitsAtInit = true, yMax = 1, yMin = 0, y_start = 0) annotation(
+    Placement(visible = true, transformation(origin = {-164, 94}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Gain gain(k = 5)  annotation(
+    Placement(visible = true, transformation(origin = {-136, 124}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Feedback feedback annotation(
+    Placement(visible = true, transformation(origin = {-110, 150}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Constant constant8(k = 1) annotation(
+    Placement(visible = true, transformation(origin = {-170, 150}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Max max annotation(
+    Placement(visible = true, transformation(origin = {-78, 156}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Constant constant9(k = 0) annotation(
+    Placement(visible = true, transformation(origin = {-170, 180}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   connect(derN_set.y, gt.derN_set) annotation(
     Line(points = {{-339, -30}, {-327, -30}, {-327, -40}}, color = {0, 0, 127}));
@@ -148,8 +174,6 @@ equation
     Line(points = {{-139.2, -50}, {-159, -50}}, color = {0, 127, 255}));
   connect(hp_drum.steam, hp_sh_1.flowIn) annotation(
     Line(points = {{-137, -7}, {-139, -7}, {-139, -3}, {-160, -3}, {-160, -40}}, color = {0, 127, 255}));
-  connect(hp_sh_1.flowOut, volumeNode1.Input) annotation(
-    Line(points = {{-168, -40}, {-168, -32}, {-174, -32}, {-174, -20}}, color = {0, 127, 255}));
   connect(gas_node.Output, gas_duct.Input) annotation(
     Line(points = {{244, -50.2}, {250, -50.2}}, color = {0, 127, 255}));
   connect(gas_duct.Output, gas_out.ports[1]) annotation(
@@ -209,7 +233,7 @@ equation
   connect(simplePump3.port_a, hp_drum.HPFW) annotation(
     Line(points = {{56, -110}, {-94, -110}, {-94, -21}, {-120, -21}}, color = {0, 127, 255}));
   connect(hp_drum.waterLevel, pid.u_m) annotation(
-    Line(points = {{-141, -10}, {-147, -10}, {-147, 12}, {-114, 12}, {-114, 46}}, color = {0, 0, 127}));
+    Line(points = {{-141, -10}, {-147, -10}, {-147, 4}, {-114, 4}, {-114, 46}}, color = {0, 0, 127}));
   connect(constant5.y, limPID1.u_s) annotation(
     Line(points = {{-39, 78}, {-32, 78}}, color = {0, 0, 127}));
   connect(ip_drum.waterLevel, limPID1.u_m) annotation(
@@ -255,19 +279,11 @@ equation
   connect(lp_sh_2.gasIn, ip_evo.gasOut) annotation(
     Line(points = {{72.8, -50}, {14.8, -50}}, color = {0, 127, 255}));
   connect(hp_sh_1.gasIn, rh_1.gasOut) annotation(
-    Line(points = {{-170, -50}, {-205, -50}}, color = {0, 127, 255}));
-  connect(rh_1.gasIn, gt.flowOut) annotation(
-    Line(points = {{-215, -50}, {-320, -50}}, color = {0, 127, 255}));
+    Line(points = {{-170, -50}, {-191, -50}}, color = {0, 127, 255}));
   connect(ip_sh_2.flowOut, volumeNode22.Port[1]) annotation(
     Line(points = {{-78, -40}, {-78, -8}}, color = {0, 127, 255}));
   connect(constant6.y, IP_RS.opening) annotation(
     Line(points = {{-298, 70}, {-290, 70}, {-290, 38}}, color = {0, 0, 127}));
-  connect(rh_1.flowOut, volumeNode23.Port[1]) annotation(
-    Line(points = {{-214, -40}, {-214, -24}, {-238, -24}, {-238, -10}}, color = {0, 127, 255}));
-  connect(IP_RS.port_a, volumeNode23.Port[2]) annotation(
-    Line(points = {{-280, 30}, {-238, 30}, {-238, -10}}, color = {0, 127, 255}));
-  connect(volumeNode1.Output, HP_RS.port_a) annotation(
-    Line(points = {{-174, 0}, {-174, 30}, {-200, 30}}, color = {0, 127, 255}));
   connect(constant1.y, HP_RS.opening) annotation(
     Line(points = {{-218, 80}, {-210, 80}, {-210, 38}}, color = {0, 0, 127}));
   connect(volumeNode5.Output, LP_RS.port_a) annotation(
@@ -280,20 +296,72 @@ equation
     Line(points = {{-300, 30}, {-340, 30}}, color = {0, 127, 255}));
   connect(vent_CV.port_b, steam_out.ports[3]) annotation(
     Line(points = {{-50, 40}, {-50, 52}, {-322, 52}, {-322, 30}, {-340, 30}}, color = {0, 127, 255}));
-  connect(constant4.y, vent_CV.opening) annotation(
-    Line(points = {{-84, 94}, {-36, 94}, {-36, 30}, {-42, 30}}, color = {0, 0, 127}));
   connect(vent_CV.port_a, volumeNode22.Port[2]) annotation(
     Line(points = {{-50, 20}, {-50, 12}, {-78, 12}, {-78, -8}}, color = {0, 127, 255}));
   connect(volumeNode21.Port[2], rh_1.flowIn) annotation(
-    Line(points = {{-206, -10}, {-206, -40}}, color = {0, 127, 255}));
+    Line(points = {{-192, -10}, {-192, -40}}, color = {0, 127, 255}));
   connect(volumeNode21.Port[1], HP_RS.port_b) annotation(
-    Line(points = {{-206, -10}, {-228, -10}, {-228, 30}, {-220, 30}}, color = {0, 127, 255}));
-  connect(constant7.y, checkValve.opening) annotation(
-    Line(points = {{-166, 46}, {-130, 46}, {-130, 38}}, color = {0, 0, 127}));
+    Line(points = {{-192, -10}, {-228, -10}, {-228, 30}, {-220, 30}}, color = {0, 127, 255}));
   connect(volumeNode22.Port[3], checkValve.port_a) annotation(
     Line(points = {{-78, -8}, {-88, -8}, {-88, 30}, {-120, 30}}, color = {0, 127, 255}));
   connect(checkValve.port_b, volumeNode21.Port[3]) annotation(
-    Line(points = {{-140, 30}, {-158, 30}, {-158, 8}, {-192, 8}, {-192, -10}, {-206, -10}}, color = {0, 127, 255}));
+    Line(points = {{-140, 30}, {-176, 30}, {-176, 10}, {-192, 10}, {-192, -10}}, color = {0, 127, 255}));
+  connect(rh_1.gasIn, hp_sh_2.gasOut) annotation(
+    Line(points = {{-202, -50}, {-214, -50}}, color = {0, 127, 255}));
+  connect(hp_sh_2.gasIn, rh_2.gasOut) annotation(
+    Line(points = {{-226, -50}, {-238, -50}}, color = {0, 127, 255}));
+  connect(rh_2.gasIn, hp_sh_3.gasOut) annotation(
+    Line(points = {{-250, -50}, {-265, -50}}, color = {0, 127, 255}));
+  connect(hp_sh_3.gasIn, rh_3.gasOut) annotation(
+    Line(points = {{-275, -50}, {-285, -50}}, color = {0, 127, 255}));
+  connect(rh_3.gasIn, gt.flowOut) annotation(
+    Line(points = {{-295, -50}, {-320, -50}}));
+  connect(rh_1.flowOut, volumeNode24.Port[1]) annotation(
+    Line(points = {{-200, -40}, {-200, -24}, {-218, -24}}, color = {0, 127, 255}));
+  connect(volumeNode24.Port[2], rh_2.flowIn) annotation(
+    Line(points = {{-218, -24}, {-240, -24}, {-240, -40}}, color = {0, 127, 255}));
+  connect(rh_2.flowOut, volumeNode25.Port[1]) annotation(
+    Line(points = {{-248, -40}, {-248, -24}, {-264, -24}}, color = {0, 127, 255}));
+  connect(volumeNode25.Port[2], rh_3.flowIn) annotation(
+    Line(points = {{-264, -24}, {-286, -24}, {-286, -40}}, color = {0, 127, 255}));
+  connect(rh_3.flowOut, volumeNode23.Port[1]) annotation(
+    Line(points = {{-294, -40}, {-294, 10}, {-264, 10}, {-264, 30}}, color = {0, 127, 255}));
+  connect(volumeNode23.Port[2], IP_RS.port_a) annotation(
+    Line(points = {{-264, 30}, {-280, 30}}, color = {0, 127, 255}));
+  connect(hp_sh_1.flowOut, volumeNode26.Port[1]) annotation(
+    Line(points = {{-168, -40}, {-168, -32}, {-180, -32}}, color = {0, 127, 255}));
+  connect(volumeNode26.Port[2], hp_sh_2.flowIn) annotation(
+    Line(points = {{-180, -32}, {-216, -32}, {-216, -40}}, color = {0, 127, 255}));
+  connect(hp_sh_2.flowOut, volumeNode27.Port[1]) annotation(
+    Line(points = {{-224, -40}, {-224, -32}, {-254, -32}}, color = {0, 127, 255}));
+  connect(volumeNode27.Port[2], hp_sh_3.flowIn) annotation(
+    Line(points = {{-254, -32}, {-266, -32}, {-266, -40}}, color = {0, 127, 255}));
+  connect(hp_sh_3.flowOut, volumeNode28.Port[1]) annotation(
+    Line(points = {{-274, -40}, {-274, -30}}, color = {0, 127, 255}));
+  connect(volumeNode28.Port[2], HP_RS.port_a) annotation(
+    Line(points = {{-274, -30}, {-274, 2}, {-196, 2}, {-196, 30}, {-200, 30}}, color = {0, 127, 255}));
+  connect(checkValve.port_b, relativePressure.port_b) annotation(
+    Line(points = {{-140, 30}, {-176, 30}, {-176, 14}, {-170, 14}}, color = {0, 127, 255}));
+  connect(relativePressure.port_a, checkValve.port_a) annotation(
+    Line(points = {{-150, 14}, {-88, 14}, {-88, 30}, {-120, 30}}, color = {0, 127, 255}));
+  connect(constant7.y, limPID2.u_m) annotation(
+    Line(points = {{-182, 68}, {-164, 68}, {-164, 82}}, color = {0, 0, 127}));
+  connect(relativePressure.p_rel, limPID2.u_s) annotation(
+    Line(points = {{-160, 24}, {-160, 44}, {-194, 44}, {-194, 94}, {-176, 94}}, color = {0, 0, 127}));
+  connect(limPID2.y, checkValve.opening) annotation(
+    Line(points = {{-152, 94}, {-130, 94}, {-130, 38}}, color = {0, 0, 127}));
+  connect(gain.y, feedback.u2) annotation(
+    Line(points = {{-124, 124}, {-110, 124}, {-110, 142}}, color = {0, 0, 127}));
+  connect(limPID2.y, gain.u) annotation(
+    Line(points = {{-152, 94}, {-150, 94}, {-150, 114}, {-158, 114}, {-158, 124}, {-148, 124}}, color = {0, 0, 127}));
+  connect(constant8.y, feedback.u1) annotation(
+    Line(points = {{-158, 150}, {-118, 150}}, color = {0, 0, 127}));
+  connect(constant9.y, max.u1) annotation(
+    Line(points = {{-158, 180}, {-124, 180}, {-124, 162}, {-90, 162}}, color = {0, 0, 127}));
+  connect(feedback.y, max.u2) annotation(
+    Line(points = {{-100, 150}, {-90, 150}}, color = {0, 0, 127}));
+  connect(max.y, vent_CV.opening) annotation(
+    Line(points = {{-66, 156}, {-36, 156}, {-36, 30}, {-42, 30}}, color = {0, 0, 127}));
   annotation(
     experiment(StartTime = 0, StopTime = 100, Tolerance = 0.001, Interval = 0.1),
     Diagram(coordinateSystem(extent = {{-360, -140}, {300, 100}})),
