@@ -11,7 +11,7 @@ model HeatingNodesChannel
 
   replaceable function hfc_func = TPPSim02.Thermal.HeatFlowRates.hfrForPipeHeating;
 
-  // Конструктивные характеристики
+// Конструктивные характеристики
   parameter SI.Diameter Din = 0.3 "Внутренний диаметр" annotation(
   Dialog(group = "Конструктивные характеристики"));
   parameter Modelica.SIunits.Length Lpipe = 25 "Длина трубопровода" annotation(
@@ -22,8 +22,7 @@ model HeatingNodesChannel
     Dialog(group = "Конструктивные характеристики"));
   parameter Modelica.SIunits.Length ke = 0.00014 "Абсолютная эквивалентная шероховатость"  annotation(
     Dialog(group = "Конструктивные характеристики"));
-    
-  // Начальные параметры
+    // Начальные параметры
   parameter Medium.AbsolutePressure pin_start = system.p_start "Начальное давление на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.AbsolutePressure pout_start = system.p_start "Начальное давление на выходе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
   parameter Medium.Temperature Tin_start = system.T_start "Начальная температура на входе" annotation(Evaluate=true,Dialog(tab = "Initialization"));
@@ -32,8 +31,9 @@ model HeatingNodesChannel
 
   
   TPPSim02.Pipes.VolumeNode[numberOfVolumes] node(each deltaVFlow = pi * Din ^ 2 * n_parallel * Lpipe / numberOfVolumes / 4,
-                                                    h_start = linspace(Medium.specificEnthalpy_pT(pin_start,Tin_start),Medium.specificEnthalpy_pT(pout_start,Tout_start),numberOfVolumes),
-                                                    p_start = linspace(pin_start, pout_start, numberOfVolumes))  annotation(
+                                                  h_start = linspace(Medium.specificEnthalpy_pT(pin_start,Tin_start),Medium.specificEnthalpy_pT(pout_start,Tout_start),numberOfVolumes),
+                                                  each nPorts = 2,
+                                                  p_start = linspace(pin_start, pout_start, numberOfVolumes))  annotation(
     Placement(visible = true, transformation(origin = {-30, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Pipes.FlowNode[numberOfVolumes+1] channel(each Din = Din,
                                                            each deltaLpiezo = Lpiezo / numberOfVolumes,
@@ -54,8 +54,8 @@ equation
 
   for i in 1:(numberOfVolumes) loop
     
-    connect(channel[i].Output, node[i].Input);
-    connect(node[i].Output, channel[i+1].Input);
+    connect(channel[i].Output, node[i].Port[1]);
+    connect(node[i].Port[2], channel[i+1].Input);
   end for;
   
   connect(Input, channel[1].Input);

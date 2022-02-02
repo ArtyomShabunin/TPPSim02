@@ -3,6 +3,5 @@ Interfaces
 Tests
 FlowNodeFixFlow
 FlowNode
-VolumeNode
 HeatingNodesChannel
-VolumeNode2
+VolumeNode

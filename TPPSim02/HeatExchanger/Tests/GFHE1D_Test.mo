@@ -3,8 +3,6 @@ within TPPSim02.HeatExchanger.Tests;
 model GFHE1D_Test
   package Medium_G = TPPSim02.Media.ExhaustGas;
   package Medium_F = Modelica.Media.Water.StandardWater;
-//  Modelica.Fluid.Sources.Boundary_pT gas_in(redeclare package Medium = Medium_G, T = 40 + 273.15, nPorts = 0, p = 1.1e5, use_T_in = true) annotation(
-//    Placement(visible = true, transformation(origin = {-70, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.MassFlowSource_T gas_in(redeclare package Medium = Medium_G, T = 40 + 273.15, m_flow = 100, use_T_in = true, nPorts = 1)  annotation(
     Placement(visible = true, transformation(origin = {-70, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_pT gas_out(redeclare package Medium = Medium_G, nPorts = 1, p = 1e5) annotation(

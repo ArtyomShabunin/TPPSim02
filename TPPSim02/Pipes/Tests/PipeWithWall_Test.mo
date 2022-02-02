@@ -7,8 +7,6 @@ model PipeWithWall_Test
     Placement(visible = true, transformation(origin = {-70, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.Thermal.TubeWall[numberOfVolumes+1] wall(each L = 1 * 10, each Tstartbar = 50 + 273.15, each lambda = 20, each rext = 0.301 / 2, each rhomcm = 7800 * 650, each rint = 0.3 / 2) annotation(
     Placement(visible = true, transformation(origin = {-10, 10}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
-//  Modelica.Thermal.HeatTransfer.Sources.FixedHeatFlow[numberOfVolumes+1] fixedHeatFlow(Q_flow = 1e3) annotation(
-//    Placement(visible = true, transformation(origin = {-10, 40}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
   Modelica.Fluid.Sources.Boundary_pT boundary_out(redeclare package Medium = Medium, T = 50 + 273.15, nPorts = 1, use_p_in = true) annotation(
     Placement(visible = true, transformation(origin = {50, -30}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
   Modelica.Blocks.Sources.Ramp ramp(duration = 100, height = 3e5, offset = 1e5, startTime = 100)  annotation(
