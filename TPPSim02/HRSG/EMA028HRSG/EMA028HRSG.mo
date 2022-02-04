@@ -74,8 +74,8 @@ model EMA028HRSG
     Placement(visible = true, transformation(origin = {196, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   TPPSim02.HeatExchanger.ParallelGFHE1D parallelECO(Din_1 = 38.1e-3, Din_2 = 38.1e-3, Lpiezo_1 = 0, Lpiezo_2 = 18.29, Lpipe_1 = 18.29, Lpipe_2 = 18.29, Nv_1 = 3, Nv_2 = 3, Tin_gas_start_1 = 100 + 273.15, Tin_gas_start_2 = 100 + 273.15, Tin_start_1 = 100 + 273.15, Tin_start_2 = 100 + 273.15, Tout_gas_start_1 = 100 + 273.15, Tout_gas_start_2 = 100 + 273.15, Tout_start_1 = 100 + 273.15, Tout_start_2 = 100 + 273.15, delta_1 = 3.404e-3, delta_2 = 2.108e-3, delta_fin_1 = 0.9906e-3, delta_fin_2 = 0.9906e-3, flowMassDynamics_1 = TPPSim02.Choices.Dynamics.SteadyState, flowMassDynamics_2 = TPPSim02.Choices.Dynamics.SteadyState, flowMomentumDynamics_1 = TPPSim02.Choices.Dynamics.SteadyState, flowMomentumDynamics_2 = TPPSim02.Choices.Dynamics.SteadyState, hfin_1 = 15.88e-3, hfin_2 = 15.88e-3, hin_start_1 = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), hin_start_2 = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), hout_start_1 = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), hout_start_2 = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), s1_1 = 89.93e-3, s1_2 = 85.05e-3, s2_1 = 111.1e-3, s2_2 = 111.1e-3, sfin_1 = 2.67e-3, sfin_2 = 3.156e-3, z1_1 = 98, z1_2 = 22, z2_1 = 10, z2_2 = 8, zahod_1 = 1, zahod_2 = 1) annotation(
     Placement(visible = true, transformation(origin = {90, -32}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  TPPSim02.Pipes.VolumeNode volumeNode8(flowMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), nPorts = 2) annotation(
-    Placement(visible = true, transformation(origin = {94, -4}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+  TPPSim02.Pipes.VolumeNode volumeNode8(flowMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), nPorts = 3) annotation(
+    Placement(visible = true, transformation(origin = {94, 24}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
   TPPSim02.Pipes.VolumeNode volumeNode9(flowMassDynamics = TPPSim02.Choices.Dynamics.SteadyState, h_start = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(system.p_start), nPorts = 2) annotation(
     Placement(visible = true, transformation(origin = {180, -50}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
   TPPSim02.Pumps.FixFlow blowdownIP(setD_flow = 1, use_D_flow_in = false) annotation(
@@ -122,6 +122,8 @@ model EMA028HRSG
     Placement(visible = true, transformation(origin = {-190, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-250, 200}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   ThermoPower.PowerPlants.Buses.Sensors sensors annotation(
     Placement(visible = true, transformation(origin = {-150, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-208, 200}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Fluid.Interfaces.FluidPort_b HP_FW(redeclare package Medium = Medium_F) annotation(
+    Placement(visible = true, transformation(origin = {94, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {60, -200}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   connect(hp_drum.upStr, hp_evo.flowOut) annotation(
     Line(points = {{-73, -9}, {-73, -16}, {-73.5, -16}, {-73.5, -22}}, color = {0, 127, 255}));
@@ -208,9 +210,9 @@ equation
   connect(volumeNode9.Port[2], parallelECO.flowIn_2) annotation(
     Line(points = {{179.6, -50}, {93.6, -50}, {93.6, -42}}, color = {0, 127, 255}));
   connect(hpFixFlow.port_b, volumeNode8.Port[1]) annotation(
-    Line(points = {{160, 56}, {161, 56}, {161, 24}, {94, 24}, {94, -4}}, color = {0, 127, 255}));
+    Line(points = {{160, 56}, {161, 56}, {161, 24}, {94, 24}}, color = {0, 127, 255}));
   connect(volumeNode8.Port[2], parallelECO.flowIn_1) annotation(
-    Line(points = {{93.6, -4}, {93.6, -22}}, color = {0, 127, 255}));
+    Line(points = {{94, 24}, {94, -13}, {93.6, -13}, {93.6, -22}}, color = {0, 127, 255}));
   connect(parallelECO.flowOut_1, volumeNode2.Port[1]) annotation(
     Line(points = {{86, -22}, {86, 24}, {-6, 24}, {-6, 2}}, color = {0, 127, 255}));
   connect(volumeNode2.Port[2], hp_eco.flowIn) annotation(
@@ -291,6 +293,8 @@ equation
     Line(points = {{-50, 76}, {-50, 84}, {-130, 84}, {-130, 44}, {-190, 44}, {-190, 90}}, color = {0, 0, 127}));
   connect(dp_ip_cv.p_rel, sensors.ip_cv_dp) annotation(
     Line(points = {{-66, 39}, {-66, 49}, {-150, 49}, {-150, 90}}, color = {0, 0, 127}));
+  connect(HP_FW, volumeNode8.Port[3]) annotation(
+    Line(points = {{94, 100}, {94, 24}}));
   annotation(
     Diagram(coordinateSystem(extent = {{-280, -100}, {280, 100}})));
 end EMA028HRSG;
