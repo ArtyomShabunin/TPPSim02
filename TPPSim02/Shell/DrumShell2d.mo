@@ -12,7 +12,7 @@ model DrumShell2d
   parameter Integer Nr = 10 "Число элементов по толщине стенки";
   parameter Modelica.SIunits.Temperature Tstart = 15+273.15 "Начальная температура металла";
 
-  TPPSim02.Thermal.HeatCapacitor[Ntetta, Nr] capacitor(each nPorts = 4)  annotation(
+  TPPSim02.Thermal.HeatCapacitor[Ntetta, Nr] capacitor(each C = 15, each T(fixed = true, start = Tstart), each nPorts = 4)  annotation(
     Placement(visible = true, transformation(origin = {-114, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Components.ThermalConductor[Ntetta, Nr-1] conductor_r annotation(
     Placement(visible = true, transformation(origin = {-100, 62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
