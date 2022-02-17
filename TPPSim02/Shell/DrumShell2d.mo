@@ -2,17 +2,27 @@ within TPPSim02.Shell;
 
 model DrumShell2d
   import Modelica.Constants.pi;
-  parameter Real Din = 2 "Внутренний диаметр барабана";
-  parameter Real delta = 0.1 "Толщина стенки барабана";
-  parameter Real tetta1 = 0 "Начальная угловая координата";
-  parameter Real tetts2 = pi "Конечная угловая координата";
-  final parameter Real r1 = Din / 2 "Начальный радиус";
-  final parameter Real r2 = Din / 2 + delta "Конечный радиус";
+  //Геометрические характеристики барабана
+  parameter Modelica.SIunits.Length Din = 1.6 "Внутренний диаметр барабана";
+  parameter Modelica.SIunits.Length delta = 80e-3 "Толщина стенки барабана";
+  parameter Modelica.SIunits.Length L = 16.2 "Длина барабана";  
   parameter Integer Ntetta = 10 "Число элементов вдоль угловой координаты";
   parameter Integer Nr = 10 "Число элементов по толщине стенки";
   parameter Modelica.SIunits.Temperature Tstart = 15+273.15 "Начальная температура металла";
-
-  TPPSim02.Thermal.HeatCapacitor[Ntetta, Nr] capacitor(each C = 15, each T(fixed = true, start = Tstart), each nPorts = 4)  annotation(
+  //Характеристики металла
+  parameter Modelica.SIunits.Density rho_m = 7800 "Плотность металла" annotation(
+    Dialog(group = "Металл"));
+  parameter Modelica.SIunits.SpecificHeatCapacity C_m = 578.05 "Удельная теплоемкость металла" annotation(
+    Dialog(group = "Металл"));
+  // Скрытые и расчетные параметры
+  final parameter Modelica.SIunits.Length r1 = Din / 2 "Начальный радиус";
+  final parameter Modelica.SIunits.Length r2 = Din / 2 + delta "Конечный радиус";
+  final parameter Modelica.SIunits.Volume V = pi*(r2^2-r1^2)*L + 2*pi*(r1^2)*delta "Объем металла барабана";
+  final parameter Modelica.SIunits.Mass M = V*rho_m "Масса металла барабана";
+  final parameter Modelica.SIunits.Area S_element[Ntetta, Nr] = {d_tetta*((r1+delta/Nr)^2-r1^2) for r1 in r1:delta/Nr:(r2-delta/Nr), d_tetta in fill(pi/Ntetta, Ntetta)} "Поперечные площади элементов разбиения";
+  final parameter Real C_element[Ntetta, Nr] = C_m*M*S_element/(pi*(r2^2-r1^2));
+  
+  TPPSim02.Thermal.HeatCapacitor[Ntetta, Nr] capacitor(C = C_element, each T(fixed = true, start = Tstart), each nPorts = 4)  annotation(
     Placement(visible = true, transformation(origin = {-114, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Components.ThermalConductor[Ntetta, Nr-1] conductor_r annotation(
     Placement(visible = true, transformation(origin = {-100, 62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

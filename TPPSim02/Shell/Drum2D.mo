@@ -1,6 +1,6 @@
 within TPPSim02.Shell;
 
-model Drum
+model Drum2D
   extends TPPSim02.Shell.BaseClases.BaseDrum;
   import Modelica.Fluid.Types;
   import TPPSim02.Thermal.HeatFlowRates.hfrDrumTop;
@@ -72,15 +72,11 @@ initial equation
     der(hw) = 0;
   else
     Gw = Gw_start;
-//    h_dew = Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hv_p(ps_start);
     ps = ps_start;
     t_m_water = t_m_water_start;
     t_m_steam = t_m_steam_start;
     hw = min(Modelica.Media.Water.IF97_Utilities.BaseIF97.Regions.hl_p(ps_start), Modelica.Media.Water.IF97_Utilities.h_pT(ps_start, t_m_water));
   end if;
-//der(Gw) = 0;
-//hw = inStream(upStr.h_outflow);
-//der(ps) = 0;
   annotation(
     Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})),
     uses(Modelica(version = "3.2.1")),
@@ -104,4 +100,5 @@ by <a href=\"mailto:shabunin_a@mail.ru\">Artyom Shabunin</a>:<br>
    Создан.</li>
 </ul>
 </html>"));
-end Drum;
+
+end Drum2D;
